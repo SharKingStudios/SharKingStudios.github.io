@@ -1,0 +1,196 @@
+---
+ // src/features/blog/components/Gallery.astro
+const { images } = Astro.props;
+
+const MAX_COLUMNS = 4;
+---
+
+<link rel="stylesheet" href="https://unpkg.com/photoswipe@5/dist/photoswipe.css" />
+
+<style>
+  #gallery {
+    display: grid;
+    gap: 1rem;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fit, minmax(calc(100% / var(--max-cols)), 1fr));
+  }
+
+  /* Items */
+  #gallery a {
+    display: block;
+    width: 100%;
+  }
+
+  #gallery img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: opacity 0.2s ease;
+    margin-top: 0rem;
+  }
+
+  #gallery img:hover {
+    opacity: 0.8;
+  }
+
+  #gallery .video {
+    width: 100%;
+    position: relative;
+    aspect-ratio: 16 / 9;
+    margin-top: 0rem;
+  }
+
+  #gallery iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Lightbox safety */
+  .pswp__img {
+    object-fit: contain !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+  }
+</style>
+
+<div id="gallery" style={`--max-cols: ${MAX_COLUMNS};`}>
+  {images.map((item: { type: string; src: string | URL | null | undefined; alt: string | null | undefined; thumb: any; }) => (
+    item.type === 'video' ? (
+      <div class="video">
+        <iframe
+          src={item.src}
+          title={item.alt ?? 'Video'}
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+    ) : (
+      <a href={item.src}>
+        <img
+          src={item.thumb ?? item.src}
+          alt={item.alt}
+          loading="lazy"
+        />
+      </a>
+    )
+  ))}
+</div>
+
+<script type="module">
+  (() => {
+    const DEF_W = '1200', DEF_H = '800';
+    const initialized = new WeakSet();
+
+    function setupGallery(gallery) {
+      if (!gallery || initialized.has(gallery)) return;
+      initialized.add(gallery);
+
+      const links = Array.from(gallery.querySelectorAll('a[href]'))
+        .filter(a => !a.closest('.video'));
+
+      // Provide fallback sizes; refine asynchronously
+      for (const a of links) {
+        a.dataset.pswpWidth  ??= DEF_W;
+        a.dataset.pswpHeight ??= DEF_H;
+
+        const src = a.getAttribute('href');
+        if (src) {
+          const img = new Image();
+          img.src = src;
+          img.decode().then(() => {
+            if (img.naturalWidth)  a.dataset.pswpWidth  = String(img.naturalWidth);
+            if (img.naturalHeight) a.dataset.pswpHeight = String(img.naturalHeight);
+          }).catch(() => {});
+        }
+      }
+
+      // Prevent navigation + queue the initial click
+      let lightbox, ready = false, queuedIndex = null;
+
+      const clickHandler = (e) => {
+        const a = e.target?.closest?.('a');
+        if (!a || !gallery.contains(a) || a.closest('.video')) return;
+
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        const idx = links.indexOf(a);
+        if (idx < 0) return;
+
+        if (ready) {
+          lightbox.loadAndOpen(idx);
+        } else {
+          queuedIndex = idx;
+        }
+      };
+
+      // Extra safety: remove href on pointerdown, restore on pointerup
+      const pointerDown = (e) => {
+        const a = e.target?.closest?.('a[href]');
+        if (!a || !gallery.contains(a) || a.closest('.video')) return;
+        if (!a.dataset._origHref) a.dataset._origHref = a.getAttribute('href') || '';
+        a.removeAttribute('href');
+      };
+      const pointerUp = () => {
+        for (const a of links) {
+          if (a.dataset._origHref && !a.hasAttribute('href')) {
+            a.setAttribute('href', a.dataset._origHref);
+          }
+        }
+      };
+
+      document.addEventListener('click', clickHandler, true);
+      document.addEventListener('pointerdown', pointerDown, true);
+      document.addEventListener('pointerup', pointerUp, true);
+
+      // Load & init PhotoSwipe bound to THIS gallery element
+      (async () => {
+        const mod = await import('https://unpkg.com/photoswipe@5/dist/photoswipe-lightbox.esm.js');
+        const PhotoSwipeLightbox = mod.default ?? mod.PhotoSwipeLightbox ?? mod;
+
+        lightbox = new PhotoSwipeLightbox({
+          gallery,
+          children: 'a',
+          pswpModule: () => import('https://unpkg.com/photoswipe@5/dist/photoswipe.esm.js'),
+          showHideAnimationType: 'fade'
+        });
+
+        lightbox.init();
+        ready = true;
+
+        if (queuedIndex != null) {
+          lightbox.loadAndOpen(queuedIndex);
+          queuedIndex = null;
+        }
+
+      })().catch(err => {
+        console.error('[Gallery] PhotoSwipe load failed', err);
+        document.removeEventListener('click', clickHandler, true);
+        document.removeEventListener('pointerdown', pointerDown, true);
+        document.removeEventListener('pointerup', pointerUp, true);
+      });
+    }
+
+    document.querySelectorAll('#gallery').forEach(setupGallery);
+
+    window.addEventListener('astro:after-swap', () => {
+      document.querySelectorAll('#gallery').forEach(setupGallery);
+    });
+    window.addEventListener('astro:page-load', () => {
+      document.querySelectorAll('#gallery').forEach(setupGallery);
+    });
+
+    // Safety net for other SPA frameworks / DOM injections
+    const mo = new MutationObserver(() => {
+      document.querySelectorAll('#gallery').forEach(setupGallery);
+    });
+    mo.observe(document.documentElement, { childList: true, subtree: true });
+  })();
+</script>

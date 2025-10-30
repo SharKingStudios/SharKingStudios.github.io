@@ -1,0 +1,216 @@
+---
+import Heading from '@/components/Heading.astro';
+import SkillCard from '@/components/SkillCard.astro';
+import { buttonVariants } from '@/components/ui/button';
+
+import type { LanguageCode } from '@/i18n/ui';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Calendar, Dumbbell } from 'lucide-react';
+
+import heroImage from '@/assets/user-hero.jpg';
+import CHARGEnorthLogo from '@/assets/charge-north-logo.jpg';
+import { Image } from 'astro:assets';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BlogPostCard from '@/features/blog/components/BlogPostCard.astro';
+import type { TranslatedSkill } from '../type';
+
+interface Props {
+  lang: LanguageCode;
+  skills: Array<TranslatedSkill>;
+  heroGreeting: string;
+  heroSubtitlePart1: string;
+  heroSubtitlePart2: string;
+  heroIntroduction: string;
+  heroViewWorkButton: string;
+  heroContactButton: string;
+  imageNotAvailable: string;
+  featuredProjectsTitle: string;
+  featuredProjectsDescription: string;
+  mySkillsTitle: string;
+  mySkillsDescription: string;
+  projectPreviewCtaText: string;
+}
+
+const {
+  lang,
+  skills,
+  heroGreeting,
+  heroSubtitlePart1,
+  heroSubtitlePart2,
+  heroIntroduction,
+  heroViewWorkButton,
+  heroContactButton,
+  imageNotAvailable,
+  featuredProjectsTitle,
+  featuredProjectsDescription,
+  mySkillsTitle,
+  mySkillsDescription,
+  projectPreviewCtaText,
+} = Astro.props as Props;
+
+// Fetch the 3 most recent blog posts (projects)
+const blogPosts: Array<CollectionEntry<'blog'>> = (await getCollection('blog', ({ data }) => data.isDraft !== true))
+  .sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf())
+  .slice(0, 3);
+---
+
+<section class="py-12 md:py-16">
+  <div class="grid md:grid-cols-2 gap-12 items-center justify-between">
+    {/* Hero Text Column */}
+    <div class="text-center md:text-left">
+      <h1
+        class="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4"
+      >
+        {heroGreeting}
+      </h1>
+      <p class="text-2xl md:text-3xl font-medium text-muted-foreground mb-2">
+        <span>{heroSubtitlePart1}</span>
+        <span class="text-primary"> | </span>
+        <span>{heroSubtitlePart2}</span>
+      </p>
+      <p class="text-lg text-muted-foreground mb-8">
+        {heroIntroduction}
+      </p>
+      <div
+        class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
+      >
+        <a
+          href="/blog"
+          class={buttonVariants({ variant: 'default', size: 'lg' })}
+        >
+          <Dumbbell className="mr-2 size-4" />
+          {heroViewWorkButton}
+        </a>
+        <a
+          href={getRelativeLocaleUrl(lang, '/contact')}
+          class={buttonVariants({ variant: 'outline', size: 'lg' })}
+        >
+          <Calendar className="mr-2 size-4" />
+          {heroContactButton}
+        </a>
+      </div>
+    </div>
+
+    {/* Hero Image (Placeholder for now) */}
+    <div class="md:text-center">
+      <div
+        class="md:w-[600px] w-full h-92 bg-muted rounded-lg shadow-xl overflow-hidden"
+      >
+        <Image
+          src={heroImage}
+          alt={'User profile image'}
+          width={600}
+          height={368}
+          densities={[1, 1.5, 2]}
+          quality="high"
+          class="h-full w-full object-cover"
+          style="object-position: center 28%;"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* About Me Section */}
+<section class="py-12 md:py-16">
+  <div class="container mx-auto px-4">
+    <Heading
+      title="About Me"
+      description=""
+      className="flex flex-col items-center mb-8"
+    />
+    <div class="prose dark:prose-invert max-w-none">
+      <p class="text-lg text-center text-muted-foreground">
+        Hi, I'm Logan Peterson. I am a Senior in North Gwinnett High School and serve as the Electrical Lead in FRC team 1771.
+        I am also a part of CHARGEnorth, my highschool's STEM program.
+        I love to build robots, program, read, and create video games.
+        I bring a unique blend of technical expertise and creative problem-solving to every project I undertake.
+        My journey in the tech world has been driven by a relentless curiosity and a desire to make a positive impact through innovation.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* Featured Projects Section */}
+<section id="projects" class="py-12 md:py-16 bg-muted/20 dark:bg-muted/10">
+  <Heading
+    title={featuredProjectsTitle}
+    description={featuredProjectsDescription}
+    className="flex flex-col items-center"
+  />
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    {
+      blogPosts.map((post) => (
+        <BlogPostCard post={post} lang={lang} />
+      ))
+    }
+  </div>
+</section>
+
+{/* CHARGEnorth Section */}
+<section class="py-12 md:py-16 bg-muted/10 dark:bg-muted/5">
+  <div class="container mx-auto px-4">
+    <Heading
+      title="What is CHARGEnorth?"
+      description="A Rigorous STEM-Based Learning Program foundational to my education"
+      className="flex flex-col items-center mb-8"
+    />
+    <div class="flex flex-col md:flex-row items-center gap-8">
+      <div class="md:w-1/2">
+        <div class="bg-background rounded-lg shadow-lg p-8 flex items-center justify-center">
+          <Image
+          src={CHARGEnorthLogo}
+          alt={'CHARGEnorth Logo'}
+          width={600}
+          height={368}
+          densities={[1, 1.5, 2]}
+          quality="high"
+          class="h-full w-full object-cover"
+          style="object-position: center 28%;"
+        />
+        </div>
+      </div>
+      <div class="md:w-1/2">
+        <div class="prose dark:prose-invert max-w-none">
+          <p class="text-lg text-muted-foreground">
+            CHARGEnorth is a rigorous STEM-based program that provides a comprehensive learning experience by integrating humanities and engineering.
+            The program is designed around project-based research and investigation, challenging us to delve deep into the course material.
+            It fosters a profound understanding of various STEM fields and cultivates essential skills such as critical thinking, problem-solving, and collaboration.
+            This innovative pathway has not only enriched my academic journey but also prepared me for future endeavors in STEM.
+          </p>
+          <p class="text-lg text-muted-foreground">
+            Beyond the core curriculum, CHARGEnorth offers a wealth of additional opportunities that enrich the learning experience.
+            The program provides access to advanced technology and resources, enabling us to engage in hands-on projects and real-world applications of our learning.
+            It also brings in industry professionals for guest lectures and workshops, offering us valuable insights into the practical aspects of STEM fields.
+            Furthermore, CHARGEnorth encourages participation in STEM-related competitions and events, fostering a spirit of innovation and competitiveness.
+            Being a part of CHARGEnorth has been a transformative experience, shaping me into a well-rounded individual ready to take on the challenges of the future.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Skills Section */}
+<!-- <section id="skills" class="py-12 md:py-16">
+  <div class="container mx-auto px-4">
+    <Heading
+      title={mySkillsTitle}
+      description={mySkillsDescription}
+      className="flex flex-col items-center"
+    />
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {
+  skills.map((skill: TranslatedSkill) => (
+          <SkillCard
+            title={skill.title}
+            description={skill.description}
+            iconName={skill.iconName}
+            technologies={skill.technologies}
+          />
+        ))
+      }
+    </div>
+  </div> -->
+</section>

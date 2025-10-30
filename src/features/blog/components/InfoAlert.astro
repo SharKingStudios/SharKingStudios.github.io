@@ -1,0 +1,22 @@
+---
+import Prose from '@/components/Prose.astro';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+type Props = {
+  title: string;
+};
+
+const { title } = Astro.props;
+---
+
+<Alert>
+  <AlertTitle>
+    <span>💡</span>
+    {title}</AlertTitle
+  >
+  <AlertDescription>
+    <Prose>
+      <slot />
+    </Prose>
+  </AlertDescription>
+</Alert>

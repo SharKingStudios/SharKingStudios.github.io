@@ -1,0 +1,89 @@
+---
+import { useTranslations } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from 'date-fns/format';
+
+export type Props = {
+  entry: CollectionEntry<'blog'>;
+};
+
+const { entry } = Astro.props;
+const post = entry.data;
+const GITHUB_USER = 'SharKingStudios';
+const GITHUB_REPO = 'Portfolio';
+const GITHUB_BRANCH = 'main';
+const editUrl = `https://github.com/${GITHUB_USER}/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/portfolioSite/src/content/blog/${entry.id}`;
+
+
+const lang = post.lang;
+const t = useTranslations(lang, 'blogPost');
+
+const { pubDate, updatedDate } = post;
+---
+
+<BaseLayout pageTitle={post.title} pageDescription={post.description}>
+  <article
+    class="prose lg:prose-xl dark:prose-invert max-w-3xl mx-auto py-8 px-4"
+  >
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">{post.title}</h1>
+      <p class="text-muted-foreground text-sm">
+        {t('publishedOn') + formatDate(pubDate, lang)}
+        {
+          updatedDate && (
+            <span class="italic">
+              {' (' + t('updatedOn') + formatDate(updatedDate, lang) + ')'}
+            </span>
+          )
+        }
+      </p>
+      {
+        post.tags && post.tags.length > 0 && (
+          <div class="mt-4">
+            {post.tags.map((tag: string) => (
+              <span class="inline-block bg-secondary text-secondary-foreground rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    {
+      post.heroImage && (
+        <Image
+          src={post.heroImage.url}
+          alt={t('heroImageAlt') + post.title}
+          class="w-full h-auto rounded-lg mb-8 shadow-lg"
+          width={768}
+          height={432}
+          densities={[1, 1.5, 2]}
+          quality="mid"
+        />
+      )
+    }
+
+    <div class="prose-content">
+      <slot />
+    </div>
+
+    <footer
+      class="mt-12 pt-8 border-t border-border flex justify-between items-center"
+    >
+      <a href="/blog" class="text-primary hover:underline">
+        &larr; {t('backToList')}
+      </a>
+      <a
+        href={editUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-sm text-muted-foreground hover:text-primary hover:underline"
+      >
+        {t('editOnGithub')}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

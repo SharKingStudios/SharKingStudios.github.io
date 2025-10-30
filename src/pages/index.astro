@@ -1,15 +1,43 @@
 ---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
+import {
+  PortfolioScreen,
+  getTranslatedProjects,
+  getTranslatedSkills,
+  type TranslatedSkill,
+  type TranslatedProject,
+} from '@/features/projects';
+
+const lang =
+  (Astro.currentLocale as LanguageCode | undefined) ?? defaultLanguage;
+const t = useTranslations(lang, 'homePage');
+
+const pageTitle = t('pageTitle');
+const pageDescription = t('pageDescription');
+
+const projects: Array<TranslatedProject> = getTranslatedProjects(lang);
+const skills: Array<TranslatedSkill> = getTranslatedSkills(lang);
+
+const layoutProps = {
+  lang,
+  projects,
+  skills,
+  heroGreeting: t('heroGreeting'),
+  heroSubtitlePart1: t('heroSubtitlePart1'),
+  heroSubtitlePart2: t('heroSubtitlePart2'),
+  heroIntroduction: t('heroIntroduction'),
+  heroViewWorkButton: t('heroViewWorkButton'),
+  heroContactButton: t('heroContactButton'),
+  imageNotAvailable: t('imageNotAvailable'),
+  featuredProjectsTitle: t('featuredProjectsTitle'),
+  featuredProjectsDescription: t('featuredProjectsDescription'),
+  mySkillsTitle: t('mySkillsTitle'),
+  mySkillsDescription: t('mySkillsDescription'),
+  projectPreviewCtaText: t('projectCardViewProject'),
+};
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+  <PortfolioScreen {...layoutProps} />
+</BaseLayout>

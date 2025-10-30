@@ -1,0 +1,101 @@
+---
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import type { LanguageCode } from '@/i18n/ui';
+import { useTranslations } from '@/i18n/ui';
+import { formatDate } from '@/lib/utils';
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Clock } from 'lucide-react';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  lang: LanguageCode;
+}
+
+const { post, lang } = Astro.props;
+const t = useTranslations(lang, 'blogPost');
+---
+
+<a
+  href={getRelativeLocaleUrl(lang, `/blog/${post.id}`)}
+  class="block group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+>
+  <Card
+    className="rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 pt-0 h-full flex flex-col"
+  >
+    {
+      post.data.heroImage ? (
+        <div class="w-full h-48 overflow-hidden rounded-t-lg flex-shrink-0">
+          <Image
+            src={post.data.heroImage.url}
+            alt={post.data.heroImage.alt}
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            width={768}
+            height={432}
+            densities={[1, 1.5, 2]}
+            quality="mid"
+          />
+        </div>
+      ) : (
+        <div class="w-full h-12 bg-muted" />
+      )
+    }
+    <CardHeader className="flex-shrink-0">
+      <CardTitle
+        className="text-xl font-semibold line-clamp-1 group-hover:text-primary transition-colors"
+      >
+        {post.data.title}
+      </CardTitle>
+      <CardDescription className="flex justify-between pt-1">
+        <p>{t('publishedOn') + formatDate(post.data.pubDate, lang)}</p>
+        {
+          post.data.readingTimeMinutes != null ? (
+            <p class="flex items-center">
+              <Clock className="mr-1.5 size-4 flex-shrink-0" />
+              {post.data.readingTimeMinutes} {t('readingTimeSuffix')}
+            </p>
+          ) : null
+        }
+      </CardDescription>
+    </CardHeader>
+    <CardContent className="flex-grow space-y-2 flex-shrink-0">
+      {
+        post.data.description && (
+          <p class="text-sm text-muted-foreground line-clamp-2">
+            {post.data.description}
+          </p>
+        )
+      }
+      {
+        post.data.tags && post.data.tags.length > 0 && (
+          <div class="flex gap-2 pt-2 line-clamp-1">
+            {post.data.tags.slice(0, 3).map((tag: string) => (
+              <Badge variant="secondary" key={tag} className="text-xs">
+                {tag}
+              </Badge>
+            ))}
+            {post.data.tags.length > 3 && (
+              <Badge variant="secondary" key="more" className="text-xs">
+                +{post.data.tags.length - 3}
+              </Badge>
+            )}
+          </div>
+        )
+      }
+    </CardContent>
+    <CardFooter className="mt-auto flex-shrink-0">
+      <span class="text-sm text-primary font-medium group-hover:underline">
+        {t('readMore')} &rarr;
+      </span>
+    </CardFooter>
+  </Card>
+</a>

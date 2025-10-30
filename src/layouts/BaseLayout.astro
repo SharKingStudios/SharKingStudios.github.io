@@ -1,0 +1,215 @@
+---
+import '../styles/global.css';
+import { useTranslations } from '@/i18n/ui';
+import Footer from '@/components/Footer.astro';
+import Header from '@/components/Header.astro';
+import BottomAppBar from '@/components/BottomAppBar.astro';
+import { Home, Briefcase, FileText, Lightbulb, MessageSquare } from 'lucide-react';
+import { ClientRouter } from 'astro:transitions';
+
+// Removed language selector imports
+import { Toaster } from 'sonner';
+
+type Props = {
+  pageTitle: string;
+  pageDescription?: string;
+};
+
+export type NavItem = {
+  href: string;
+  label: string;
+  icon: any;
+};
+
+const { pageTitle, pageDescription } = Astro.props;
+const lang = 'en';
+const tSite = useTranslations(lang, 'site');
+const tNav = useTranslations(lang, 'nav');
+const navItems: Array<NavItem> = [
+  { href: '/', label: tNav('home'), icon: Home },
+  { href: '/blog', label: 'Projects', icon: FileText },
+  { href: '/contact', label: tNav('contact'), icon: MessageSquare },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content={pageDescription || tSite('description')}
+    />
+
+    <link
+      rel="icon"
+      type="image/png"
+      href="/favicons/light-mode/favicon-96x96.png"
+      sizes="96x96"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="/favicons/dark-mode/favicon-96x96.png"
+      sizes="96x96"
+      media="(prefers-color-scheme: dark)"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicons/light-mode/favicon.svg"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="/favicons/dark-mode/favicon.svg"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <link
+      rel="shortcut icon"
+      href="/favicons/light-mode/favicon.ico"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="shortcut icon"
+      href="/favicons/dark-mode/favicon.ico"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicons/light-mode/apple-touch-icon.png"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicons/dark-mode/apple-touch-icon.png"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <link
+      rel="manifest"
+      href="/favicons/light-mode/site.webmanifest"
+      media="(prefers-color-scheme: light)"
+    />
+    <link
+      rel="manifest"
+      href="/favicons/dark-mode/site.webmanifest"
+      media="(prefers-color-scheme: dark)"
+    />
+
+    <script is:inline>
+      const getInitialTheme = () => {
+        if (
+          typeof localStorage !== 'undefined' &&
+          localStorage.getItem('theme')
+        ) {
+          return localStorage.getItem('theme');
+        }
+        // Always default to light mode, ignore system preference
+        return 'light';
+      };
+      const theme = getInitialTheme();
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('theme', theme);
+      }
+    </script>
+    <title>{pageTitle || tSite('title')}</title>
+
+    {/* Font, for example Google Fonts - to adapt according to your choices */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"
+      defer></script>
+    <ClientRouter />
+  </head>
+  <body class="h-[100dvh] bg-background font-sans antialiased flex flex-col">
+    {/* Tailwind classes for the body */}
+    <header class="hidden md:block">
+      <!-- passer aussi navItems mais sans le premier element dont le href === '/' -->
+      <Header
+        navItems={navItems.filter((item) => item.href !== '/') as NavItem[]}
+      />
+    </header>
+
+    <main
+      class="container mx-auto px-4 py-8 flex-1 max-w-screen-2xl pb-20 md:pb-8"
+    >
+      <slot />
+    </main>
+    <div class="hidden md:block">
+      <Footer />
+    </div>
+    <BottomAppBar
+      navItems={navItems}
+    />
+    <Toaster position="bottom-right" richColors client:load />
+    {/* Global scripts if needed, for example for analytics */}
+    <script is:inline type="text/javascript">
+      document.addEventListener('DOMContentLoaded', () => {
+        const initializeAndRunMermaid = () => {
+          if (typeof mermaid !== 'undefined') {
+            const isDarkMode =
+              document.documentElement.classList.contains('dark');
+            const mermaidTheme = isDarkMode ? 'dark' : 'default';
+
+            let themeVars = {
+              fontFamily: '"Inter", sans-serif',
+              fontSize: '15px',
+              // Base variables (light mode defaults)
+              primaryColor: isDarkMode ? '#3B0764' : '#F3EFFF', // Node background
+              primaryTextColor: isDarkMode ? '#F3F4F6' : '#1f2937', // Node text
+              primaryBorderColor: isDarkMode ? '#A78BFA' : '#9333ea', // Node border
+              lineColor: isDarkMode ? '#A78BFA' : '#7E22CE', // Edge lines
+              textColor: isDarkMode ? '#E5E7EB' : '#374151', // General text (like edge labels)
+              edgeLabelBackground: isDarkMode ? '#4B3264' : '#E9D5FF', // Background for edge labels
+              // Specific for sequence diagrams, etc. (can be expanded)
+              actorBkg: isDarkMode ? '#3B0764' : '#F3EFFF',
+              actorBorder: isDarkMode ? '#A78BFA' : '#9333ea',
+              labelBoxBkgColor: isDarkMode ? '#2e104f' : '#f7f2ff', // Background for loop/alt/opt boxes
+              labelTextColor: isDarkMode ? '#E5E7EB' : '#374151',
+              noteBkgColor: isDarkMode ? '#2a0f4a' : '#fbf7ff',
+              noteTextColor: isDarkMode ? '#E5E7EB' : '#374151',
+              clusterBkg: isDarkMode ? '#240a3c' : '#faf5ff',
+              clusterBorder: isDarkMode ? '#7c3aed' : '#a855f7',
+            };
+
+            mermaid.initialize({
+              startOnLoad: false, // We call run() manually
+              theme: mermaidTheme,
+              themeVariables: themeVars,
+            });
+
+            mermaid.run({
+              nodes: document.querySelectorAll('pre.mermaid'), // Correct selector for inline-svg strategy
+            });
+          } else {
+            console.error('Mermaid object not found.');
+          }
+        };
+
+        initializeAndRunMermaid(); // Initial run on page load
+
+        document.addEventListener('astro:after-swap', () => {
+          initializeAndRunMermaid(); // Re-initialize and run after page swaps for SPA-like navigation
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+---
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card.tsx';
+
+export type Props = {
+  projectId: string; // L'ID de ton projet StackBlitz (obligatoire)
+  cardTitle?: string; // Titre affiché dans l'en-tête de la carte
+  stackBlitzTitle?: string; // Attribut 'title' de l'iframe pour l'accessibilité
+  file?: string; // Fichier à ouvrir par défaut (ex: 'src/index.ts')
+  initialPath?: string; // Chemin initial pour la prévisualisation (ex: '/home')
+  view?: 'editor' | 'preview'; // Vue par défaut ('editor' ou 'preview')
+  height?: string; // Hauteur de l'iframe (ex: '600px')
+  hideExplorer?: boolean; // Cacher l'explorateur de fichiers
+  hideNavigation?: boolean; // Cacher la barre de navigation de StackBlitz
+  theme?: 'light' | 'dark'; // Thème de StackBlitz
+  openFile?: string; // Fichiers à ouvrir, séparés par des virgules (ex: 'index.ts,styles.css')
+  clickToLoad?: boolean; // Activer le "Click to Load" pour de meilleures performances
+  devToolsHeight?: number; // Hauteur (en %) des outils de développement StackBlitz
+  terminalHeight?: number; // Hauteur (en %) du terminal StackBlitz
+};
+
+const {
+  projectId,
+  cardTitle,
+  stackBlitzTitle = cardTitle || `Interactive Example: ${projectId}`,
+  file = 'src/main.ts',
+  initialPath,
+  view = 'editor',
+  height = '700px',
+  hideExplorer = true,
+  hideNavigation = true,
+  theme = 'dark',
+  openFile = 'src/main.ts',
+  clickToLoad = true,
+  devToolsHeight,
+  terminalHeight = 30,
+} = Astro.props;
+
+const params = new URLSearchParams();
+params.set('embed', '1');
+params.set('file', file);
+params.set('view', view);
+params.set('theme', theme);
+
+if (clickToLoad) params.set('ctl', '1');
+if (hideExplorer) params.set('hideExplorer', '1');
+if (hideNavigation) params.set('hideNavigation', '1');
+if (initialPath) params.set('initialpath', initialPath); // Note: 'initialpath' en minuscules pour StackBlitz
+if (openFile) params.set('openFile', openFile);
+if (devToolsHeight !== undefined)
+  params.set('devtoolsheight', String(devToolsHeight));
+if (terminalHeight !== undefined)
+  params.set('terminalheight', String(terminalHeight));
+
+const stackBlitzUrl = `https://stackblitz.com/edit/${projectId}?${params.toString()}`;
+---
+
+<div class="my-8">
+  {/* Marge pour espacer les embeds */}
+  <Card client:visible>
+    {/* client:visible est important car Card est un composant React */}
+    {
+      cardTitle && (
+        <CardHeader>
+          <CardTitle>{cardTitle}</CardTitle>
+        </CardHeader>
+      )
+    }
+    <CardContent>
+      <iframe
+        src={stackBlitzUrl}
+        title={stackBlitzTitle}
+        allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+        style={`width: 100%; height: ${height}; border: 0; border-radius: 0.375rem; overflow: hidden;`}
+        loading="lazy"
+      >
+      </iframe>
+    </CardContent>
+  </Card>
+</div>

@@ -1,0 +1,88 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
+export type Props = {
+  title: string;
+  categoryText?: string;
+  tags?: Array<string>;
+  imageUrl?: ImageMetadata;
+  imageAltText?: string;
+  className?: string;
+  classNameHeader?: string;
+  classNameTitle?: string;
+  classNameContent?: string;
+  classNameFooter?: string;
+};
+
+const {
+  title,
+  categoryText,
+  tags,
+  imageUrl,
+  imageAltText,
+  className,
+  classNameHeader,
+  classNameTitle,
+  classNameContent,
+  classNameFooter,
+} = Astro.props;
+---
+
+<Card className={cn('h-full flex flex-col', className)}>
+  <CardHeader className={cn('pb-4', classNameHeader)}>
+    <CardTitle
+      className={cn(
+        'text-2xl font-semibold leading-none tracking-tight',
+        classNameTitle
+      )}
+    >
+      {title}
+    </CardTitle>
+    {
+      categoryText && (
+        <CardDescription className="text-sm text-muted-foreground pt-1">
+          {categoryText}
+        </CardDescription>
+      )
+    }
+  </CardHeader>
+  <CardContent className={cn('space-y-4 flex-grow', classNameContent)}>
+    {
+      imageUrl && imageAltText && (
+        <Image
+          src={imageUrl}
+          alt={imageAltText}
+          class="mb-4 h-48 w-full rounded-md object-cover"
+          loading="lazy"
+          width={400}
+          height={300}
+          densities={[1, 1.5, 2]}
+          quality="medium"
+        />
+      )
+    }
+    <slot />
+  </CardContent>
+  {
+    tags && tags.length > 0 && (
+      <CardFooter className={cn('flex flex-wrap gap-2 pt-4', classNameFooter)}>
+        {tags.map((tag) => (
+          <Badge variant="secondary" key={tag}>
+            {tag}
+          </Badge>
+        ))}
+      </CardFooter>
+    )
+  }
+</Card>

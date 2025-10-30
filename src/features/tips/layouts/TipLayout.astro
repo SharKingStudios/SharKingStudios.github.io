@@ -1,0 +1,79 @@
+---
+import { Badge } from '@/components/ui/badge';
+import { buttonVariants } from '@/components/ui/button';
+import { useTranslations } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { formatDate } from '@/lib/utils';
+import { render, type CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Pencil } from 'lucide-react';
+
+interface Props {
+  tip: CollectionEntry<'tips'>;
+}
+
+const { tip } = Astro.props;
+const { Content } = await render(tip);
+
+const lang = tip.data.lang || 'fr';
+const t = useTranslations(lang, 'tipsPage');
+
+const GITHUB_USER = 'SharKingStudios';
+const GITHUB_REPO = 'Portfolio';
+const GITHUB_BRANCH = 'main';
+const editUrl = `https://github.com/${GITHUB_USER}/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${tip.filePath}`;
+---
+
+<BaseLayout pageTitle={tip.data.title} pageDescription={tip.data.description}>
+  <article
+    class="prose lg:prose-xl dark:prose-invert max-w-3xl mx-auto py-8 px-4"
+  >
+    <header class="mb-8">
+      <h1 class="text-4xl font-bold mb-2">{tip.data.title}</h1>
+      <p class="text-sm text-muted-foreground">
+        {formatDate(tip.data.pubDate, lang)}
+        {
+          tip.data.updatedDate && (
+            <span class="italic">
+              {' '}
+              {formatDate(tip.data.updatedDate, lang)})
+            </span>
+          )
+        }
+      </p>
+      {
+        tip.data.tags && tip.data.tags.length > 0 && (
+          <div class="mt-4 flex gap-2">
+            {tip.data.tags.map((tag: string) => (
+              <Badge variant="secondary" className="md:text-lg">
+                #{tag}
+              </Badge>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <Content />
+
+    <footer
+      class="mt-12 pt-8 border-t border-border flex items-center justify-between gap-4"
+    >
+      <a
+        href={getRelativeLocaleUrl(lang, `/tips/`)}
+        class={buttonVariants({ variant: 'ghost' }) + ' no-underline'}
+      >
+        &larr; {t('backToList')}
+      </a>
+      <a
+        href={editUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class={buttonVariants({ variant: 'ghost' }) + ' no-underline'}
+      >
+        <Pencil className="size-4" />
+        {t('editOnGithub')}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

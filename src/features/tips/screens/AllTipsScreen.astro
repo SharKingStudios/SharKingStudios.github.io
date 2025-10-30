@@ -1,0 +1,71 @@
+---
+// src/features/tips/components/AllTipsScreen.astro
+import { EmptyState } from '@/components/empty-state';
+import Heading from '@/components/Heading.astro';
+import TipCard from '@/features/tips/components/TipCard.astro';
+import { useTranslations, type LanguageCode } from '@/i18n/ui';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  tips: Array<CollectionEntry<'tips'>>;
+  lang: LanguageCode;
+}
+
+const { tips, lang } = Astro.props;
+const t = useTranslations(lang, 'tipsPage');
+const featuredTips = tips.filter((tip) => tip.data.featured);
+const regularTips = tips.filter((tip) => !tip.data.featured);
+---
+
+<BaseLayout pageTitle={t('metaTitle')} pageDescription={t('metaDescription')}>
+  <div class="container mx-auto px-4 py-8">
+    <Heading title={t('title')} description={t('description')} />
+
+    {
+      tips.length === 0 ? (
+        <EmptyState title={t('noTips')} />
+      ) : (
+        <div class="space-y-12">
+          {/* Featured Tips */}
+          {featuredTips.length > 0 && (
+            <section>
+              <h2 class="text-2xl font-semibold mb-6 flex items-center gap-2">
+                <span class="text-2xl">⭐</span>
+                {t('featuredTips')}
+              </h2>
+              <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-2">
+                {featuredTips.map((tip) => (
+                  <TipCard tip={tip} lang={lang} />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* All Regular Tips */}
+          <section>
+            {regularTips.length > 0 && (
+              <h2 class="text-2xl font-semibold mb-6">{t('allTips')}</h2>
+            )}
+
+            {/* Responsive Grid */}
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 grid-rows-2">
+              {regularTips.map((tip) => (
+                <TipCard tip={tip} lang={lang} />
+              ))}
+            </div>
+          </section>
+
+          {/* Stats */}
+          <div class="text-center pt-8 border-t border-border/30">
+            <p class="text-sm text-muted-foreground mb-4">
+              {tips.length}{' '}
+              {tips.length > 1 ? t('tipsAvailable') : t('tipAvailable')}
+            </p>
+          </div>
+        </div>
+      )
+    }
+  </div>
+</BaseLayout>

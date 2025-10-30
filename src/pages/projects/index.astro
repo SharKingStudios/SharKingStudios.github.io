@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { getTranslatedProjects, ProjectsScreen } from '@/features/projects';
+import { ui, type LanguageCode, defaultLanguage, languages } from '@/i18n/ui';
+
+let lang: LanguageCode;
+const currentLocale = Astro.currentLocale;
+
+if (currentLocale && currentLocale in languages) {
+  lang = currentLocale as LanguageCode;
+} else {
+  lang = defaultLanguage;
+}
+
+const t = ui[lang] as (typeof ui)[typeof defaultLanguage];
+const projects = getTranslatedProjects(lang);
+
+const projectsPageTranslations = t.projectsPage;
+const metaTitle =
+  projectsPageTranslations?.metaTitle ??
+  projectsPageTranslations?.title ??
+  'My Projects';
+const metaDescription =
+  projectsPageTranslations?.metaDescription ?? 'List of all my projects.';
+---
+
+<BaseLayout pageTitle={metaTitle} pageDescription={metaDescription}>
+  <ProjectsScreen projects={projects} t={t} lang={lang} />
+</BaseLayout>

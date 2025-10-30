@@ -1,0 +1,97 @@
+---
+lang: 'en'
+title: 'BeanBot'
+description: 'A small robot that connects to my Twitch chat and moves based on chat commands.'
+pubDate: 2023-12-8
+heroImage:
+  url: '../../../../assets/BeanBot/beanBot-final.jpg'
+  alt: 'BeanBot Robot Project'
+tags: ['makerspace', 'robotics']
+difficulty: 'intermediate'
+isDraft: false
+featured: true
+relatedPosts: []
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+import InfoAlert from '@/features/blog/components/InfoAlert.astro';
+
+## Makerspace 2 - BeanBot
+
+In this makerspace project I created a small robot that could connect to my Twitch chat and move based on what the chat wanted. It would tally collective votes in a time period and move based on the most requested direction.
+
+---
+
+## My Goal
+
+My goal for this project was to create a robot that could connect to a Twitch chat and move based on commands it receives.
+
+### Why Twitch chat?
+
+I wanted to incorporate Twitch chat into this project to create something that was interactive for people on the stream.  
+While this was not necessary, it would make the robot interactive and fun on a livestream.
+
+## Making the chassis
+
+I used the laser cutter to cut out the wooden chassis. The holes for the motors were not large enough so I enlarged them with a file. I then put the chassis together with hot glue.  
+It was not planned to be this small, but I like small, tightly packed robots so I don't mind.
+
+<Gallery images={[
+  { src: '/assets/beanBot/beanBot-cut.jpg', alt: 'Motor Testing' },
+  { src: '/assets/beanBot/beanBot-laser.jpg', alt: 'Motor Testing' },
+]} />
+
+## Code
+
+I used some example code online as it worked with the hardware I had.  
+There was a significant portion that didn't work with my hardware. (I used different libraries and my ESP32 had a different pinout.)
+
+I changed the code to work with my motor driver and my ESP32 pinout as well as removing other code I found unnecessary.  
+The code tallies up inputs it receives from Twitch chat and has the motors move in the direction people voted on going.
+
+Some of the main code is here:
+
+<Gallery images={[
+  { src: '/assets/beanBot/beanBot-code.jpg', alt: 'Some of the robot code' },
+]} />
+
+## Electronics
+
+Because the chassis was so small, all of the electronics needed to be placed very close to each other. The wiring also keeps the top from closing.
+
+On the final day of the project, my L293D motor driver chip was not letting a lot of current through, keeping the motors from spinning.  
+I created a new way to control the motors using transistors. This caused me to lose the ability to go backwards but is fine considering the amount of time I had when the L293D chip broke.
+
+I also needed a power wire just for the ESP32 board during testing because my 9V battery was a bit dead and could not give it enough power.  
+The battery was enough for the motors though.
+
+My custom motor driver (Left)
+LD293D motor driver (Right)
+
+<Gallery images={[
+  { src: '/assets/beanBot/beanBot-wiring.jpg', alt: 'Motor Testing' },
+  { src: '/assets/beanBot/beanBot-open-text.jpg', alt: 'Motor Testing' },
+]} />
+
+## Final Product / Reflection
+
+The final thing I added was the sharpie mustache and bolded eyes.
+
+The robot will take input from Twitch chat and tally it up to determine where it travels, allowing the robot to be moved based on what people in Twitch chat collectively want.
+
+I love how all the space in the chassis is used and everything connects to each other with the wiring.  
+The small size was not originally the plan. It would have been better if I had provided just a little bit more space for the wires to sit so that I could close the top lid.
+
+Power needs to be a higher priority when setting up electronics in future projects.  
+The power distribution board I have currently takes up a lot of space and I had to use a non-rechargeable 9V battery.  
+Since I didn't secure a full power battery I had to use a power cable during testing to provide enough power to the ESP32.
+
+<Gallery images={[
+  { type: 'video', src: 'https://www.youtube.com/embed/NKnZxvpsL-U', alt: 'Live Robot Testing' },
+]} />
+‎
+<Gallery images={[
+  { src: '/assets/beanBot/beanBot-final.jpg', alt: 'Motor Testing' },
+  { src: '/assets/beanBot/beanBot-final-open.jpg', alt: 'Motor Testing' },
+  { src: '/assets/beanBot/beanBot-final-back.jpg', alt: 'Motor Testing' },
+]} />

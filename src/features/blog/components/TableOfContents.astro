@@ -1,0 +1,61 @@
+---
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card.tsx';
+import { useTranslations, type LanguageCode } from '@/i18n/ui';
+import { cn } from '@/lib/utils';
+
+type TocItem = {
+  text: string;
+  href: string;
+  subItems?: TocItem[];
+  level?: number;
+};
+
+export type Props = {
+  tocItems: Array<TocItem>;
+  lang: LanguageCode;
+  className?: string;
+};
+
+const { tocItems, lang, className } = Astro.props;
+
+const t = useTranslations(lang, 'toc');
+const componentTitle = t('title');
+---
+
+<Card className={cn('my-8', className)}>
+  <CardHeader>
+    <CardTitle>{componentTitle}</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <ul>
+      {
+        tocItems.map((item) => (
+          <li class="mb-2 list-decimal">
+            <Button variant="link" asChild>
+              <a href={item.href} class="font-semibold">
+                {item.text}
+              </a>
+            </Button>
+            {item.subItems && item.subItems.length > 0 && (
+              <ul class="list-disc">
+                {item.subItems.map((subItem) => (
+                  <li class="mb-1">
+                    <Button variant="link" asChild>
+                      <a href={subItem.href}>{subItem.text}</a>
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </CardContent>
+</Card>

@@ -1,0 +1,154 @@
+---
+// src/components/SkillCard.astro
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
+import {
+  MonitorSmartphone,
+  ServerCog,
+  Database,
+  PenTool,
+  Network,
+  type LucideIcon,
+} from 'lucide-react';
+import type { IconType } from 'react-icons';
+import {
+  SiReact,
+  SiAngular,
+  SiTypescript,
+  SiAstro,
+  SiTailwindcss,
+  SiHtml5,
+  SiCss3,
+  SiJavascript,
+  SiNodedotjs,
+  SiBun,
+  SiDeno,
+  SiExpress,
+  SiNestjs,
+  SiHono,
+  SiPython,
+  SiPostgresql,
+  SiMysql,
+  SiMongodb,
+  SiSqlite,
+  SiPrisma,
+  SiDrizzle,
+  SiFigma,
+  SiDocker,
+  SiKubernetes,
+  SiGit,
+  SiAmazon,
+} from 'react-icons/si';
+
+// Define the mapping from iconName to Lucide icon component
+// Mapping for Lucide icons (general skill category)
+const iconComponents: Record<string, LucideIcon> = {
+  MonitorSmartphone,
+  ServerCog,
+  Database,
+  PenTool,
+  Network,
+};
+
+// Mapping for react-icons (specific technologies)
+const techIconComponents: Record<string, IconType> = {
+  react: SiReact,
+  angular: SiAngular,
+  typescript: SiTypescript,
+  astro: SiAstro,
+  tailwindcss: SiTailwindcss,
+  html5: SiHtml5,
+  css3: SiCss3,
+  javascript: SiJavascript,
+  nodejs: SiNodedotjs,
+  bun: SiBun,
+  deno: SiDeno,
+  express: SiExpress,
+  nestjs: SiNestjs,
+  hono: SiHono,
+  python: SiPython,
+  postgresql: SiPostgresql,
+  mysql: SiMysql,
+  mongodb: SiMongodb,
+  sqlite: SiSqlite,
+  prisma: SiPrisma,
+  drizzleorm: SiDrizzle,
+  figma: SiFigma,
+  docker: SiDocker,
+  kubernetes: SiKubernetes,
+  git: SiGit,
+  amazonservices: SiAmazon,
+};
+
+import type { Technology } from '@/data/skills'; // Import the Technology type
+
+export type Props = {
+  title: string;
+  description: string;
+  iconName: string;
+  technologies?: Array<Technology>;
+};
+
+const { title, description, iconName, technologies = [] } = Astro.props;
+const IconComponent = iconComponents[iconName];
+---
+
+<Card
+  className="flex flex-col h-full hover:shadow-lg transition-shadow duration-300 gap-3 pt-2"
+>
+  <CardHeader className="pb-3 pt-4">
+    {/* Adjusted padding for consistency */}
+    {/* User's modified header structure - ensure it's correctly aligned */}
+    {/* CardTitle itself is not a flex container, the div inside it is. */}
+    <div class="flex items-start">
+      {/* This div will be the flex container for icon and title text block */}
+      <div class="mr-4 flex-shrink-0">
+        {/* Icon container */}
+        <span
+          class="inline-flex items-center justify-center p-2 bg-primary/10 rounded-lg"
+        >
+          <IconComponent className="size-5 text-primary" />
+        </span>
+      </div>
+      <div class="flex-grow">
+        {/* Title block, allows title to wrap */}
+        <CardTitle
+          className="text-lg font-semibold group-hover:text-primary transition-colors"
+        >
+          {title}
+        </CardTitle>
+      </div>
+    </div>
+  </CardHeader>
+
+  <CardContent className="flex-grow pt-2 pb-3">
+    {/* flex-grow pushes footer down, padding adjusted */}
+    {
+      /* Description text indented to align with title. Calculation: icon div's mr-4 (1rem) + icon span's effective width (approx 2.25rem) = 3.25rem */
+    }
+    <p class="text-sm text-muted-foreground line-clamp-3 pl-[3.25rem]">
+      {description}
+    </p>
+  </CardContent>
+
+  {
+    technologies && technologies.length > 0 && (
+      <CardFooter className="pt-3 pb-4 flex flex-wrap gap-x-3 gap-y-2 justify-start items-center">
+        {technologies.map((tech) => {
+          const TechIcon = techIconComponents[tech.id.toLowerCase()];
+          return TechIcon ? (
+            <TechIcon
+              className="size-5 text-muted-foreground hover:text-primary transition-colors"
+              title={tech.name}
+            />
+          ) : null;
+        })}
+      </CardFooter>
+    )
+  }
+</Card>

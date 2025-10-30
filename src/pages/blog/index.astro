@@ -1,0 +1,35 @@
+---
+import { type LanguageCode } from '@/i18n/ui';
+import { AllBlogPostsScreen } from '@/features/blog';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+const lang = (Astro.currentLocale ?? 'en') as LanguageCode;
+
+const blogEntries: Array<CollectionEntry<'blog'>> = await getCollection(
+  'blog',
+  ({ data, id }) => {
+  return data.isDraft !== true;
+  }
+);
+
+const enrichedPosts = await Promise.all(
+  blogEntries.map(async (postEntry: CollectionEntry<'blog'>) => {
+    const { remarkPluginFrontmatter } = await render(postEntry);
+    return {
+      id: postEntry.id,
+      slug: postEntry.id,
+      collection: postEntry.collection,
+      data: {
+        ...postEntry.data,
+        readingTimeMinutes: remarkPluginFrontmatter.readingTimeMinutes,
+      },
+    };
+  })
+);
+
+enrichedPosts.sort(
+  (a, b) =>
+    new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
+);
+---
+
+<AllBlogPostsScreen posts={enrichedPosts} lang={lang} />

@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Image } from 'astro:assets';
+import errorIllustration from '@/assets/error.png';
+import errorIllustrationDark from '@/assets/error-dark.png';
+import { buttonVariants } from '@/components/ui/button';
+import Heading from '@/components/Heading.astro';
+import { ArrowLeft } from 'lucide-react';
+
+const lang =
+  (Astro.currentLocale as LanguageCode | undefined) ?? defaultLanguage;
+const t = useTranslations(lang, 'notFoundPage');
+
+const pageTitle = t('pageTitle');
+const pageDescription = t('message');
+---
+
+<BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+  <section class="text-center py-12">
+    <div class="container mx-auto px-4 max-w-2xl">
+      <Image
+        src={errorIllustration}
+        alt="Error illustration - Light Mode"
+        class="w-64 h-auto mx-auto mb-8 block dark:hidden"
+        densities={[1, 1.5, 2]}
+        quality="mid"
+      />
+      <Image
+        src={errorIllustrationDark}
+        alt="Error illustration - Dark Mode"
+        class="w-64 h-auto mx-auto mb-8 hidden dark:block"
+        densities={[1, 1.5, 2]}
+        quality="mid"
+      />
+      <Heading
+        title={t('title')}
+        description={t('message')}
+        titleClassName="md:text-5xl"
+      />
+
+      <a
+        href={getRelativeLocaleUrl(lang, '/')}
+        class={buttonVariants({ variant: 'default' })}
+      >
+        <ArrowLeft className="mr-2 size-4" />
+        {t('homeLink')}</a
+      >
+    </div>
+  </section>
+</BaseLayout>

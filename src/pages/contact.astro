@@ -1,0 +1,47 @@
+---
+import { ContactScreen } from '@/features/contact';
+import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const lang = defaultLanguage as LanguageCode;
+const t = useTranslations(lang, 'contactPage');
+
+const pageMeta = {
+  title: t('pageTitle'),
+  description: t('pageDescription'),
+};
+
+const formTranslations = {
+  firstNameLabel: t('firstNameLabel'),
+  lastNameLabel: t('lastNameLabel'),
+  emailLabel: t('emailLabel'),
+  messageLabel: t('messageLabel'),
+  firstNamePlaceholder: t('firstNamePlaceholder'),
+  lastNamePlaceholder: t('lastNamePlaceholder'),
+  emailPlaceholder: t('emailPlaceholder'),
+  messagePlaceholder: t('messagePlaceholder'),
+  sendButtonLabel: t('sendButtonLabel'),
+  toastSuccessMessageSent: t('toastSuccessMessageSent'),
+  toastErrorFailedToSend: t('toastErrorFailedToSend'),
+  toastErrorUnexpected: t('toastErrorUnexpected'),
+  toastErrorDetails: t('toastErrorDetails'),
+  toastErrorValidationFailed: t('toastErrorValidationFailed'),
+};
+
+const layoutProps = {
+  lang,
+  mainHeadingTitle: pageMeta.title,
+  mainHeadingDescription: t('description'),
+  formTitle: t('formTitle'),
+  formTranslations,
+  orSeparatorText: t('orSeparatorText'),
+  calendarTitle: t('calendarTitle'),
+  calendarDescription: t('calendarDescription'),
+  calendarLinkLabel: t('calendarLinkLabel'),
+  calendarUrl: import.meta.env.PUBLIC_GOOGLE_CALENDAR_URL as string,
+};
+---
+
+<BaseLayout pageTitle={pageMeta.title} pageDescription={pageMeta.description}>
+  <ContactScreen {...layoutProps} />
+</BaseLayout>
