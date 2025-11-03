@@ -8,17 +8,17 @@ import {
 } from '@/features/projects';
 
 export async function getStaticPaths() {
-  const paths = [];
-  const langCode: LanguageCode = 'en';
-  const projects = getTranslatedProjects(langCode);
-  for (const project of projects) {
-    paths.push({
-      params: { slug: project.slug },
-      props: { project },
-    });
-  }
+  // const paths = [];
+  // const langCode: LanguageCode = 'en';
+  // const projects = getTranslatedProjects(langCode);
+  // for (const project of projects) {
+  //   paths.push({
+  //     params: { slug: project.slug },
+  //     props: { project },
+  //   });
+  // }
 
-  return paths;
+  return [];
 }
 
 const lang = Astro.currentLocale as LanguageCode;

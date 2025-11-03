@@ -43,7 +43,7 @@ const tipsCollection = defineCollection({
           alt: z.string(),
         })
         .optional(),
-      lang: z.enum(['fr', 'en']).optional().default('fr'),
+      lang: z.enum(['fr', 'en']).optional().default('en'),
       relatedTips: z.array(reference('tips')).optional(),
       featured: z.boolean().optional(),
       difficulty: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
