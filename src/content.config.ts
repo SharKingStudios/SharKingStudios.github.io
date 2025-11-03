@@ -20,7 +20,7 @@ const blogCollection = defineCollection({
       relatedPosts: z.array(reference('blog')),
       readingTimeMinutes: z.number().optional(), // Added by remark plugin
       isDraft: z.boolean(),
-      lang: z.enum(['fr', 'en']).optional().default('fr'),
+      lang: z.enum(['fr', 'en']).optional().default('en'),
     }),
 });
 
@@ -52,5 +52,4 @@ const tipsCollection = defineCollection({
 
 export const collections = {
   blog: blogCollection,
-  tips: tipsCollection,
 };
