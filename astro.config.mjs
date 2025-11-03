@@ -8,7 +8,7 @@ import rehypeMermaid from 'rehype-mermaid';
 
 export default defineConfig({
   output: 'static',
-  site: 'https://sharkingstudios.github.io/',
+  site: 'https://loganpeterson.org',
   base: '/',
   integrations: [
     react(),
