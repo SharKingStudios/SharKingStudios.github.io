@@ -8,8 +8,8 @@ import rehypeMermaid from 'rehype-mermaid';
 
 export default defineConfig({
   output: 'static',
-  site: 'https://sharkingstudios.github.io/',
-  base: '/',
+  site: 'https://sharkingstudios.github.io/MyWebsite/',
+  base: '/MyWebsite/',
   integrations: [
     react(),
     mdx({
