@@ -87,7 +87,7 @@ export const ui = {
         'Picture representing Logan Peterson.',
       featuredProjectsTitle: '3 latest projects',
       featuredProjectsDescription:
-        "Here are some of the projects I've recently worked on. Feel free to explore!",
+        "Here are some of the projects I've recently worked on. <a href=\"/blog\" class=\"text-primary underline\">Feel free to explore!</a>",
       projectCardViewProject: 'View Project',
       projectCardViewCode: 'View Code',
       imageNotAvailable: 'Image not available for now',

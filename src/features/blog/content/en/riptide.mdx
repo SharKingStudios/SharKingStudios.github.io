@@ -1,0 +1,398 @@
+---
+lang: 'en'
+title: 'Riptide'
+description: 'An Infinitely Expandable, Ocean Inspired Keyboard.'
+pubDate: 2025-08-10
+heroImage:
+  url: '../../../..//assets/riptide/Riptide Render Front.png'
+  alt: 'Riptide Render Front'
+tags: ['Hack Club', 'electronics']
+difficulty: 'advanced'
+isDraft: false
+featured: false
+relatedPosts: []
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+
+**Total time Overall: 37h**
+
+# Riptide
+
+### My Massive Glowing Submission to Highway
+
+---
+
+## Renders
+*Visuals because everyone loves eye candy.*
+
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Render Front.png', alt: 'Final CAD Render Top' },
+]} />
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Render Top Close.png', alt: 'Final CAD Render Top Close' },
+]} />
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Render Front Low.png', alt: 'Final CAD Render Front Low' },
+]} />
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Render Back.png', alt: 'Final CAD Render Back' },
+]} />
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 110135.png', alt: 'Final PCB view back' },
+]} />
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 192022.png', alt: 'Final PCB view top' },
+]} />
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 225739.png', alt: 'Finished Schematic' },
+]} />
+
+---
+
+## What is this?
+It's a custom keyboard built for infinite expansion through its module ports! It uses an Orpheus Pico, QMK firmware, and even more LEDs.
+The expansion modules could be literally anything! From a screen, a rechargeable battery, a buzzer, or even more LEDs! 
+
+### Features:
+- **Keycool84 Layout** – Possibly the best?
+- **Rotary Encoder** – Twist for volume, scroll, or secret hacker functions.
+- **Clickable Encoder Button** – Because sometimes, twisting isn’t enough.
+- **61 SK6812 Mini LEDs** – ✨Almost blinding✨
+- **Literally Infinite Expandability** – Custom designed module slots that support chaining submodules together!
+
+---
+
+## How It Works:
+The infinitely expandable modules were built using an I2C bus! Also since the Orph Pico knows which modules are plugged in, certain modules could unlock further functionality from another! Like a button module being able to activate a haptic feedback (vibration) module. (This isnt built in yet // Software still WIP)
+
+Each module slot has a 5V, EN, GND, SDA, and SCL lines.
+After a module is plugged in and ready to work it will pull its EN line high to 3.3V, letting the Pico know there is something there in that expansion slot!
+
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Render Side.png', alt: 'Final CAD Render Side' },
+]} />
+
+---
+
+## Why?
+I built this keyboard for [Highway](https://highway.hackclub.com)—an awesome Hack Club YSWS project mainly run by [Alex Ren](https://github.com/qcoral). (I helped run this event as one of the project reviewers!) I wanted to create something that wasnt just useful, but also super cool! Thats why I went with creating my own expansion support instead of just adding a USB hub and calling it a day.
+
+---
+
+## BOM
+All the bits and pieces needed can be found **[here](https://github.com/SharKingStudios/Riptide/blob/main/BOM.csv)**.
+
+
+---
+
+# How I built it:
+
+## Started work on keyboard layout and matrix
+
+To start this project I just researched a bit into the different keyboard layout types. I wanted to keep the layout similar as my current (membrane) keyboard.
+I chose to use the Keycool84 layout as seen in the layout editor:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-01 180754.png', alt: 'Keycool84 layout' },
+]} />
+
+I also grabbed an old keyboard matrix I made when I was working on a keyboard prior to this. (This is about as far as I got lol)
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-01 173815.png', alt: 'old stuff' },
+]} />
+
+---
+
+## Fixed the keyboard matrix
+
+Today I fixed up the keyboard matrix to have it match my Keycool84 layout that I chose.
+When I tried "fixing" it for the first time I actually added even more keys lol:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-02 180107.png', alt: 'not fixed lol' },
+]} />
+
+At first I was trying to create the keyboard matrix based of of the physical location of the keys.
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 174132.png', alt: 'Google drawings my beloved' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-02 181154.png', alt: 'Almost fixed' },
+]} />
+
+I then realized that since the keyboard layout editor would export the matrix data, I could make it much smaller.
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-02 181807.png', alt: 'Smol layout (11x8)' },
+]} />
+
+---
+
+## LEDs and Infinite Expandability Support
+
+Today I worked on putting together the LEDs in the schematic, wiring the pico to the keyboard matrix, as well as figuring out how I wanted to do the infinite expandability.
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-03 112104.png', alt: 'LED Chain' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-03 113014.png', alt: 'Pico' },
+]} />
+
+So I want to have 5 pins for each module. 5V, EN, GND, SDA, SCL
+I am planning on having the EN pin return 3.3V when the expansion module is ready. By having a EN pin for every module, I would be able to know which port I was plugging the module into. I am thinking this can give me some nice control and possibility for animations when you connect a module in a specific spot. (Like a wave emminating out from that port using the LEDs etc).
+Anyways, the I2C bus seems like a fairly robust option considering you can use it with breadboard components, so it should be more then fine to route across my keyboard to the various module slots.
+
+Since I would run out of GPIO pins if I gave the number connectors I wanted their own EN pin and since I already had an I2C bus, I decided to use a I2C GPIO expander to handle the EN pins. This also set my number of expansion slots at 16. (theres literally no reason to have this many but more is better right??)
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-04 183018.png', alt: 'I2C GPIO expander' },
+]} />
+
+I then wanted to find a component that would work well for connecting the keyboard to the modules. I really wanted to have magnets integrated into the components to make hot swaps easier. While I could have used a 6 pin USB connector that would have looked pretty lame and someone would have plugged a USB drive into it hoping it would have worked. I actually spent a couple of hours on LCSC going through quite literally every single 5 pin 3 pin and 4 pin magnetic connector but all I found was this component here:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-03 150607.png', alt: 'Sketchy connector top view' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-03 151058.png', alt: 'Sketchy connector side view' },
+]} />
+
+(I manually rotated it onto its side)
+
+Anyway I thought this would be too sketchy so I left that idea and went to the good ol reliable:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-03 151632.png', alt: 'Normal Female 2.54 header' },
+]} />
+
+After I figured out my connector footprint I put together a layout for my PCB (w.o. LEDs):
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-03 162051.png', alt: 'Initial PCB layout' },
+]} />
+
+---
+
+## Laying out LEDs + Encoder and OLED
+
+Today I layed out the LEDs into my PCB as well as adding an Encoder and an OLED.
+I started the LED placement with the 14 LEDs that would act as status LEDs for any connected module:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-05 193353.png', alt: 'Indicator LEDs in place' },
+]} />
+
+I also added even more LEDs that I would place around the keyboard and structured them into 2 data lines (I am hoping this makes programming the specifics easier).
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-05 213738.png', alt: 'Even more LEDs' },
+]} />
+
+After that I wired up all of the module slots in the schematic:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-05 213746.png', alt: 'Meh formatting' },
+]} />
+
+Then changed it to have better formatting:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-05 215503.png', alt: 'Better formatting' },
+]} />
+
+And that finishes the schematic:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 225739.png', alt: 'Finished Schematic' },
+]} />
+
+I then counted the spaces for where I wanted LEDs to go (checked it twice lol so 2 dots):
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-05 19331153.png', alt: 'Marked spaces for LEDs' },
+]} />
+
+After that I added in all the keyboard LEDs:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-05 222740.png', alt: 'All keyboard LEDs' },
+]} />
+
+---
+
+## Routing Time
+
+I tried using .6mm to route everything then just switched back to .4mm to fit everything easier.
+I also added some 4.7k pull up resistors on the I2C lines because I forgot those earlier.
+After this I also added every 3D model. (Cant have a bare render right??)
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-06 193905.png', alt: 'Adding 3D models' },
+]} />
+
+After routing ***the entire thing*** I realized I forgot to add the all important stabiliers on the shift key, enter key, and backspace.
+When I did add them I needed to redo some wiring but they also interfered with multiple items including various LEDs and some of the expansion ports: <br/> *(Yes I fixed the 90 degree trace)*
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-06 182811.png', alt: 'Wires getting cut off' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-06 202143.png', alt: 'Other parts getting cut off' },
+]} />
+
+After I finished all of the issues with the PCB I finally got this:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 190146.png', alt: 'Finalized PCB trace routing' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 102621.png', alt: 'No DRC errors' },
+]} />
+
+---
+
+## Silkscreen Art
+
+I just got back from [Undercity](/blog/en/highway-to-undercity/), it was super fun!! I loved helping run such a big event!
+Anyways, this is me after I finished up with the rereviews that were waiting for me during undercity...
+
+Today I worked on the PCB art for the keyboard. 
+I got this nice wavy pattern in for the front:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 102556.png', alt: 'PCB editor view front' },
+]} />
+
+and used my collection of silkscreen art for the back (mostly from rawr.hackclub.com):
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 110143.png', alt: 'PCB editor view back' },
+]} />
+
+Final product:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 192022.png', alt: 'Final PCB view top' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 110135.png', alt: 'Final PCB view back' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 110151.png', alt: 'Final PCB editor view' },
+]} />
+
+I even totally got no DRC errors!!
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 102621.png', alt: 'No DRC errors' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-24 102629.png', alt: 'Ignored errors (8)' },
+]} />
+
+---
+
+## CAD time
+
+Today I got my Onshape set up with files from my KiCAD and started work on the case.
+I spent an especially long time working on getting every single keycap in the CAD. (To make it look awesome ofc)
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-28 145759.png', alt: 'Start of CAD' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 192826.png', alt: 'My God why are there so many edits just for keycaps' },
+]} />
+
+After I got the keycaps in place I created a keyboard plate as well as the 3D printed top section that would hold it down.
+I wanted to use a similar style to my Splashpad and keep the awesome looking Orpheus Pico visible.
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-28 161337.png', alt: 'Meh Top Plate' },
+]} />
+
+I didnt like the way it was turning out so I changed it to this:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 193648.png', alt: 'Better Top Plate' },
+]} />
+
+I then finished the day by adding bronze standoffs that I had lying around from a previous project and a 18ga steel bottom plate:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 193747.png', alt: 'Nice Bottom (Plate)' },
+]} />
+
+---
+
+## Finished the CAD
+
+Creating the middle section was kinda the hardest part of the CAD. Its also what really pulled this keyboard together (almost literally). It does look truely awesome though.
+
+WIP:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 193844.png', alt: 'CAD WIP' },
+]} />
+
+When making the isogrid pattern I followed the same kind of procedure I used with my Splashpad.
+I finished it up by changing all the keycaps to the colors they would be with the set I intend on using.
+
+Final CAD:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 161927.png', alt: 'Final CAD Render' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 161947.png', alt: 'Final CAD Render Top' },
+]} />
+
+---
+
+## Magic Keyboard Firmware
+
+When I had made my Riptide hackpad, I used KMK firmware for its ease of use as I thought it would be easier.
+After I built it, I have been having significant trouble getting it to work. Instead for the keyboard I have decided to use QMK firmware.
+
+Making the firmware actually wasnt as hard as I thought it would be since I already had Ubuntu Linux installed in my terminal.
+
+I did experience a number of errors:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 210524.png', alt: 'Compile error' },
+]} />
+
+But I was able to get it compiled:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-30 210546.png', alt: 'Compiled yay' },
+]} />
+
+---
+
+## Blender my Glorious Goat
+
+I dont know blender but I really want some nice visuals.
+Time to learn it ig.
+
+It actually wasnt too bad, except how after I exported from my CAD the keyboard had a bajillion assigned materials that I had to go through.
+The extent of my lighting knowledge is to have a Key, Fill, and Ring.
+
+Working Screenshots:
+
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-31 185527.png', alt: 'Working 1' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-31 193347.png', alt: 'Working 2' },
+]} />
+<Gallery images={[
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-31 193629.png', alt: 'Working 3' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-31 203950.png', alt: 'Working 4' },
+  { src: '/assets/riptide/Screenshots/Screenshot 2025-07-31 212755.png', alt: 'Working 5' },
+]} />
+
+I was able to make some totally awesome looking renders:
+
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Render Front.png', alt: 'alt text' },
+  { src: '/assets/riptide/Riptide Render Top Close.png', alt: 'alt text' },
+]} />
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Render Front Low.png', alt: 'alt text' },
+  { src: '/assets/riptide/Riptide Render Back.png', alt: 'alt text' },
+]} />
+
+
+---
+
+
+## Disclaimer  
+This project is 100% free, open-source, and powered by **vibes**. If it breaks, explodes, or opens a black hole, **that’s on you.**
+
+<Gallery images={[
+  { src: '/assets/riptide/Riptide Banner Bottom.png', alt: 'Riptide Banner Bottom' },
+]} />

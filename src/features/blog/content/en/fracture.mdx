@@ -1,0 +1,425 @@
+---
+lang: 'en'
+title: 'Fracture'
+description: 'An infinitely expandable, velocity sensing split midi keyboard.'
+pubDate: 2025-12-31
+heroImage:
+  url: '../../../..//assets/fracture/Render-Back.png'
+  alt: 'Fracture Banner'
+tags: ['Hack Club', 'electronics']
+difficulty: 'advanced'
+isDraft: false
+featured: false
+relatedPosts: []
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+
+# Fracture
+
+### A modular, glowing wall of keys with its own brain, synth, and buzzer per board.
+
+---
+
+## Renders  
+*Visuals because everyone loves eye candy.*
+
+<Gallery images={[
+  { src: '/assets/fracture/Render-Top.png', alt: 'Front Render' },
+]} />
+<Gallery images={[
+  { src: '/assets/fracture/Render-Back.png', alt: 'Angled Render' },
+]} />
+<Gallery images={[
+  { src: '/assets/fracture/Render-Back-Side.png', alt: 'Angled Render' },
+]} />
+
+<Gallery images={[
+  { src: '/assets/fracture/PCB-Render-Back.png', alt: 'Back PCB Render' },
+]} />
+<Gallery images={[
+  { src: '/assets/fracture/PCB-Render-Top.png', alt: 'Top PCB Render' },
+]} />
+
+<Gallery images={[
+  { src: '/assets/fracture/Schematic-Root.png', alt: 'Schematic Overview' },
+  { src: '/assets/fracture/Schematic-Analog-Input.png', alt: 'Schematic Overview' },
+  { src: '/assets/fracture/Schematic-Audio-Output.png', alt: 'Schematic Overview' },
+]} />
+
+---
+
+## What is this?
+
+It's an infinitely expandable MIDI keyboard system built around an ESP32-S3, designed so each board is a fully-featured synth module. When you connect a bunch together, they behave like one giant, continuous instrument.
+Each board gives you **2 octaves** of hall-effect keys (24 main keys), plus 8 “function” keys for extra tricks. It also has **onboard I2S audio output**, a buzzer synth per board, and 45 addressable RGB LEDs for underglow + status.
+Boards talk to each other over **RS-485 chaining** so note events get shared, and it also does **USB MIDI**, meaning any board plugged into your computer speaks for the whole keyboard.
+
+One board is fun.  
+Four boards gives you a full velocity sensing piano.
+
+---
+
+## Features
+
+### Infinitely Chainable Boards
+
+Each board is its own little 2-octave chunk: **24 main keys** and **8 extra keys** for function/mode stuff. The boards discover each other physically using an **RS-485 bus** (SP3485) and **left/right neighbor sense pins**, so you can keep chaining them together.
+
+---
+
+### Hall-Effect Velocity Sensing
+
+No mushy rubber domes here. Keys are read using dual **74HC4067 analog multiplexers**, and velocity is computed using the time between “start of motion” and “fully pressed”.
+
+It’s all done in firmware - no external velocity hardware, just some math and a lot of analog readings.
+
+---
+
+### Onboard Polyphonic Synth (I2S DAC)
+
+Each board is a tiny synth. It uses an **ES9023P I2S DAC** driven at **44.1 kHz, stereo**, and supports up to *8 simultaneous voices*.
+
+You don’t *need* a computer to hear anything, the keyboard can sing on its own.
+
+---
+
+### Polyphonic Buzzer Per Board
+
+Because one audio path wasn’t enough. Each board also has a **timer-driven buzzer synth** that runs at a **20 kHz sample rate**. It’s used for a startup jingle, any feedback sounds, and mild harassment of anyone nearby.
+
+---
+
+### RGB Overlay (Key Underglow + Debug UI)
+
+Each board has **45 WS2812 LEDs** and they’re not just there to look pretty (but they do). Every note triggers a *“splash in the pond”* ripple, and the ripple spreads based on *MIDI note distances*, not physical LED position. Since note events are shared over RS-485, the ripple effect works *across all boards*.
+
+Basically: the keyboard tells you how it feels in RGB.
+
+---
+
+### USB MIDI for the Entire Chain
+
+Any board plugged into USB exposes MIDI for **all** boards. So you can plug in literally any board in the chain, open your DAW / synth, and play the entire keyboard from that one cable.
+
+---
+
+### Rotary Encoder
+
+Because knobs are scientifically proven to make things better.
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMTMsInB1ciI6ImJsb2JfaWQifX0=--99de79d4ff3f00c7d9a9436ad52880f100a68d77/Render-Long-Top.png', alt: 'Render-Long-Top' },
+]} />
+
+---
+
+## BOM
+
+All the silicon, magnetics, and glowsticks live **[here](https://github.com/SharKingStudios/Fracture/blob/main/BOM.csv)**.
+
+---
+
+## Why?
+
+Because regular MIDI controllers are boring. Off-the-shelf keyboards don’t re-map themselves and you usually cant chain them together.
+
+Fracture exists to be modular, mildly smart, and just slightly over-engineered.
+
+I honestly thought this would be an easier project, but feature creep got the best of me...
+
+
+---
+
+# Development Log
+
+## 12/23/2025 8:46 PM - Created the Specifications  
+
+
+I started this project by outlining all of the goals I have for what specifically I want this thing to do.
+
+The hardest thing about this stage was figuring out how I was going to do per key velocity sensing. I ended up going with the idea of using analog hall effect keyswitches. I don't think they will be as good as a normal keyboard, but it should be worlds better than just a normal keyswitch.
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjgzOTIsInB1ciI6ImJsb2JfaWQifX0=--f0ed6d70d245cf26b999d67eb499a3b90f77f311/image.png', alt: 'image' },
+]} />
+
+I also put together a list of some components I would need to create this design:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjgzOTMsInB1ciI6ImJsb2JfaWQifX0=--8f5929be26a6d95663731973e545e1b1cc2e8bbf/image.png', alt: 'image' },
+]} />
+  
+
+## 12/23/2025 8:52 PM - Finished the Schematic  
+
+
+All these analog components are making the schematic pretty interesting. I had to make sure the signals were well isolated so I gave them their own 3.3V supply.
+
+I got all the components imported and used their datasheets to connect everything together.
+It ended up taking the entire day, but everything should be done on the schematic side at this point.
+
+It ended up being so big it had to be split into 3 different sheets:
+
+Heres the main one:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjgzOTUsInB1ciI6ImJsb2JfaWQifX0=--fdb3785f80d4dc0e747afb10b739c30f14b9c4c8/Screenshot%202025-12-19%20222003.png', alt: 'Screenshot 2025-12-19 222003' },
+]} />
+
+Heres the input page:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjgzOTYsInB1ciI6ImJsb2JfaWQifX0=--4d8b26744f95968c4be2ff5ce66cdc774cca424b/Screenshot%202025-12-19%20221953.png', alt: 'Screenshot 2025-12-19 221953' },
+]} />
+
+And heres the output page:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjgzOTcsInB1ciI6ImJsb2JfaWQifX0=--b77c4bb607a083bbe9f1008617e8f1ae84a2c04d/Screenshot%202025-12-19%20221945.png', alt: 'Screenshot 2025-12-19 221945' },
+]} />
+  
+
+## 12/23/2025 8:57 PM - Finished the Layout  
+
+
+I finished combining the keyboard switch footprint with my analog sensor footprint to create the correct holes for the hall effect keyswitch (Since the only analog keyswitch footprint I could find were Void Switches).
+
+I also finished putting all of the components from my schematic into my PCB.
+I wanted to keep it as thin as reasonably possible, while keeping the function keys away from the second row so I don't accidentally press it while playing.
+
+Anyway here's what the PCB looks like now:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MjgzOTgsInB1ciI6ImJsb2JfaWQifX0=--b92fd9ea35913ea7113d68dac9177abad9b38363/Screenshot%202025-12-19%20221903.png', alt: 'Screenshot 2025-12-19 221903' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDAsInB1ciI6ImJsb2JfaWQifX0=--f6deac6a591322d864f12a01be1387601ae7bbe3/Screenshot%202025-12-19%20221929.png', alt: 'Screenshot 2025-12-19 221929' },
+]} />
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDAsInB1ciI6ImJsb2JfaWQifX0=--f6deac6a591322d864f12a01be1387601ae7bbe3/Screenshot%202025-12-19%20221929.png', alt: 'Screenshot 2025-12-19 221929' },
+]} />
+  
+
+## 12/23/2025 9:02 PM - Finished Routing the PCB  
+
+
+I finished routing all of the PCB. This is my first PCB that I designed with 4 layers initially in mind. It does make it quite a bit easier, so I used the extra space to make all of the traces nice and pretty.
+Look at all those massive data lines...
+
+Anyway heres what the PCB looks like now:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDQsInB1ciI6ImJsb2JfaWQifX0=--96fa2c694eec02c2968bfb6dd4d8b2b8592f16a2/Screenshot%202025-12-20%20151227.png', alt: 'Screenshot 2025-12-20 151227' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDUsInB1ciI6ImJsb2JfaWQifX0=--73b1061be6917030c7cbf481d197637ed6ce5723/Screenshot%202025-12-20%20151238.png', alt: 'Screenshot 2025-12-20 151238' },
+]} />
+
+And it even has no DRC Errors!
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDMsInB1ciI6ImJsb2JfaWQifX0=--869fd9264dcd30f30111922901146cb355283841/Screenshot%202025-12-20%20151157.png', alt: 'Screenshot 2025-12-20 151157' },
+]} />
+  
+
+## 12/23/2025 9:05 PM - Fixing a silly little mistake  
+
+Oopsies...
+
+I forgot that the footprint I imported for my ESP32 didnt include a keepout zone for the antenna, and I had routed a ton of traces right over it...
+
+Well after shifting things around a bit and adding a keepout for all the zone fills I got this:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDcsInB1ciI6ImJsb2JfaWQifX0=--5be83ee4656d41ae651fc5a6c869a777b59a48ed/Screenshot%202025-12-20%20162938.png', alt: 'Screenshot 2025-12-20 162938' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDgsInB1ciI6ImJsb2JfaWQifX0=--a9cab875df839b60f0cc26db46574c4e936685b9/Screenshot%202025-12-20%20152547.png', alt: 'Screenshot 2025-12-20 152547' },
+]} />
+  
+
+## 12/23/2025 9:13 PM - Panelization (The better way)  
+
+The last time I tried to panelize stuff the PCB manufacturer didn't actually do the VCUTs (Because I didnt pay extra for them to treat it like a panel..). This time I am going to do mouse bites. It took a bit of tweaking to get these to work. It was mainly an issue with the PCB Editor snap size and all the footprints not lining up but I got it to work in the end.
+
+While I didnt need to panelize the larger PCBs to each other I did want to add some connector PCBs, so this was a good way of doing that.
+
+Heres what the epic PCBs look like now:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MDksInB1ciI6ImJsb2JfaWQifX0=--872100c594871239b6257b82fb9464fb39adaaf6/Screenshot%202025-12-20%20163211.png', alt: 'Screenshot 2025-12-20 163211' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MTAsInB1ciI6ImJsb2JfaWQifX0=--3deb0642b0b47e3e5a6465061e0c117cc35290d6/Screenshot%202025-12-20%20162340.png', alt: 'Screenshot 2025-12-20 162340' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MTEsInB1ciI6ImJsb2JfaWQifX0=--4edcb0d3a75c5fdf79eee5d371cae6de5ee069f0/Screenshot%202025-12-20%20162359.png', alt: 'Screenshot 2025-12-20 162359' },
+]} />
+  
+
+## 12/23/2025 9:17 PM - Fixed ESP32 Color  
+
+The model for the ESP32 that I had found had a bright green PCB color, which didnt match the product or my design at all, so I wanted to change it.
+
+I imported the file into Onshape and selected every single side that was green and changed it over to black. I also removed the LCSC logo :p
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MTIsInB1ciI6ImJsb2JfaWQifX0=--8a01630411820d059c5ec5384a10dac3c2e07fea/Screenshot%202025-12-20%20163850.png', alt: 'Screenshot 2025-12-20 163850' },
+]} />
+
+After I fixed the color I exported that and brought it back into my KiCAD project.
+
+Heres what the PCB looks like now:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MTMsInB1ciI6ImJsb2JfaWQifX0=--23ca4c3929b6efd04494647ccb953602f4196443/Screenshot%202025-12-20%20164239.png', alt: 'Screenshot 2025-12-20 164239' },
+]} />
+  
+
+## 12/23/2025 9:33 PM - CADCADCAD  
+
+Banner:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MzcsInB1ciI6ImJsb2JfaWQifX0=--c66f683693adfaaedc8536f9d42bfa30a19b3441/Screenshot%202025-12-21%20200816.png', alt: 'Screenshot 2025-12-21 200816' },
+]} />
+
+All of the CAD for the project is done at this point.
+
+I started by importing the PCB step file into Onshape and aligning the connector PCBs into their places.
+Once I finished that I put a keyboard keycap on each switch (manually using mate connectors since I forgot to do this in KiCAD)
+
+Heres what the CAD Process looked like:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MjQsInB1ciI6ImJsb2JfaWQifX0=--faa9c57e659c4d67502da1964a5aeea235321871/Screenshot%202025-12-20%20175012.png', alt: 'Screenshot 2025-12-20 175012' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MjMsInB1ciI6ImJsb2JfaWQifX0=--e275fec5a2f6eac78209b4e7e85dc073c9a9218c/image.png', alt: 'image' },
+]} />
+
+After getting the case files done I imported them into the assembly with the PCBs.
+It really does look awesome..
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MzIsInB1ciI6ImJsb2JfaWQifX0=--39b4e15da631139e323c0ac4fdffd6d6abbb1f51/Screenshot%202025-12-21%20200816.png', alt: 'Screenshot 2025-12-21 200816' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MzUsInB1ciI6ImJsb2JfaWQifX0=--6574ea6b569e059848e8227a3c54a6acf54cabbe/Screenshot%202025-12-21%20200825.png', alt: 'Screenshot 2025-12-21 200825' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MzYsInB1ciI6ImJsb2JfaWQifX0=--e82a5643cec9b78305d64a69ca8100d70a37ba57/Screenshot%202025-12-21%20200837.png', alt: 'Screenshot 2025-12-21 200837' },
+]} />
+
+After finishing this assembly I then made the assembly of the entire piano (Made up of the combined 4 sections)
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MzgsInB1ciI6ImJsb2JfaWQifX0=--a184254a6d4f8b61c238ee6a1139244ff8203535/Screenshot%202025-12-21%20201851.png', alt: 'Screenshot 2025-12-21 201851' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6Mjg0MzksInB1ciI6ImJsb2JfaWQifX0=--722290893586abe3e3709b61844b643a0834d88e/Screenshot%202025-12-21%20201902.png', alt: 'Screenshot 2025-12-21 201902' },
+]} />
+  
+
+## 12/26/2025 - Blender Renders  
+
+Banner:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMDksInB1ciI6ImJsb2JfaWQifX0=--c3e5ec65605b407ce02f818a4a7a89cc6d406626/Render-Top.png', alt: 'Render-Top' },
+]} />
+
+Ok this wouldnt have taken so long except that my normal workflow was interrupted...
+
+If I wanted to get this project out with the renders I needed to finish them before I got back home, to my computer with a GPU. This meant that all of my renders were done on a poor laptop with 8GB of ram. (Blender only crashed a couple times...)
+
+I didn't count the time for when the renders were actually going, since I got up and left but I did count everything else.
+
+My first challenge was getting my Onshape model into something that Blender can actually use.
+Since it cant normally import a step file and I wasnt about to mess around with Blender Addons I needed to find something that could change my step file over to a GLB file or OBJ file.
+
+My first attempts were downloading freecad and attempting to export the imported step file as a OBJ file, but when I did this I just got the entire thing as a single mesh, which would make it impossible for me to apply different materials to all of the separate objects. (I am sure there is a way to do this in blender but I wouldnt know)
+
+After figuring this out I searched for the solution I used during my last render.
+It was some random thing called "Cad Assistant" and after I got it working on my linux desktop I was able to finally export the model as a GLB file which I could import into blender.
+
+Once in blender, I created an infinite background and set up lighting and materials.
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMDcsInB1ciI6ImJsb2JfaWQifX0=--38512806999b435100415142068033c2040b239c/Screenshot_20251224_181608.png', alt: 'Screenshot_20251224_181608' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMDgsInB1ciI6ImJsb2JfaWQifX0=--a9e830c77f0c0ee77bf333c1c098d21116e46e60/Screenshot_20251224_181652.png', alt: 'Screenshot_20251224_181652' },
+]} />
+
+After all that work (And a lot of waiting on the computer which I didn't include in the time) I got these absolute beauties:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMDksInB1ciI6ImJsb2JfaWQifX0=--c3e5ec65605b407ce02f818a4a7a89cc6d406626/Render-Top.png', alt: 'Render-Top' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMTAsInB1ciI6ImJsb2JfaWQifX0=--977343ed8cbf97183b634c9a210cdf71b6311dc6/Render-Top-Angled.png', alt: 'Render-Top-Angled' },
+]} />
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMTEsInB1ciI6ImJsb2JfaWQifX0=--9bc0c846787734f0d31a4875f4008550b5246497/Render-Back.png', alt: 'Render-Back' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMTIsInB1ciI6ImJsb2JfaWQifX0=--1ca596ac2bedf052a49a0216616b7c55df503ee1/Render-Back-Side.png', alt: 'Render-Back-Side' },
+]} />
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMTMsInB1ciI6ImJsb2JfaWQifX0=--99de79d4ff3f00c7d9a9436ad52880f100a68d77/Render-Long-Top.png', alt: 'Render-Long-Top' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzAzMTQsInB1ciI6ImJsb2JfaWQifX0=--8ff25554381a5e4ee914c6ecfd145b00e0657a29/Render-Long-Side.png', alt: 'Render-Long-Side' },
+]} />
+
+These last 2 renders would crash blender as it finalized the images, meaning I had to both reduce their render times and catch it right before it finished.  
+
+## 12/28/2025 - Finished Firmware  
+
+Vibecoding for the win!
+It still took me a while to define all of the pin mappings and say exactly what I needed everything to do (Theres a ton of stuff on this board)
+
+I'll show off all of the stuff I added in this firmware in the demo video, but until then you need to read the code to figure it out :shh:
+
+The boards can expand infinitely and automatically remap their positions to play in the correct octaves. All of the MIDI keys also have velocity sensing which propagate to all of the other boards, meaning any of them can be a MIDI output.
+
+Heres a screenshot of some of the constants that can be edited:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzE2NDcsInB1ciI6ImJsb2JfaWQifX0=--8d099fd10b8a1390c4995578d3ca737827f79896/image.png', alt: 'image' },
+]} />
+
+(Wow thats a whole zach latta constants)  
+
+## 12/30/2025 - Added PCB art and cleaned up silkscreen + PCB Renders  
+
+I didn't think this would take me 2 hours but here we are...
+
+I went through every single item of text and make it comic sans. I also added some silkscreening for my name and the project title, as well as of a bunch of silkscreen art covering the front and back sides of the pcb.
+
+Since the PCBs are finished at this point I also did the renders:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzI4NzQsInB1ciI6ImJsb2JfaWQifX0=--93b8c1a28a78d1d9cc2acf93c80a4ee2343ab04a/image.png', alt: 'image' },
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6MzI4NzYsInB1ciI6ImJsb2JfaWQifX0=--7f6cc87dccd26554daf070395130f39910a1c4ff/image.png', alt: 'image' },
+]} />
+  
+
+## 1/1/2026 - BOM and PCB Fab Prep  
+
+I finished putting together the bill of materials for the project, it took me a while to find some reasonably priced hall effect key switches.
+
+I get that component count on LCSC isn't a perfect scale for project complexity, but it seems pretty close :p
+
+Most of what took so long about this process was going through the JLCPCB Fabrication requirements and docs. After I uploaded the existing Gerbers I got quite the shock after an additional 16 dollar charge was placed on my board for the combination of the connector PCB and main PCB.
+
+As it turns out its way cheaper to make the connector PCB as a separate panel. I also realized I can actually panelize them for no extra cost since they are the same design as each other.
+
+Here's what that new panel looks like:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6NjYwNDksInB1ciI6ImJsb2JfaWQifX0=--08d09ffa5f5a80077525ebc63b255ff5a933b52f/image.png', alt: 'image' },
+]} />
+
+Here's what the main PCB looks like:
+
+<Gallery images={[
+  { src: 'https://blueprint.hackclub.com/user-attachments/blobs/proxy/eyJfcmFpbHMiOnsiZGF0YSI6NjYwNTEsInB1ciI6ImJsb2JfaWQifX0=--00ed5b6bdfebafb1b085ab67b7ca8cc2e1a7d0e2/image.png', alt: 'image' },
+]} />
+
+The main thing was I added 2 sensing pins to allow the boards to automatically figure out where they are in the list. I also moved a couple traces around for better tolerances. (This part was kinda negligible though)  
+
+---
+
+## Disclaimer
+
+This project is [open-source](https://github.com/SharKingStudios/Fracture) and powered by *vibes and a sprinkle of C++*.
+
+If you:
+- Somehow mess up the RS-485 bus 
+- Drive speakers directly off something that shouldn’t  
+- Misconfigure power and let the smoke out  
+
+That’s on you.
+
+<Gallery images={[
+  { src: '/assets/fracture/Render-Long-Side.png', alt: 'Long Side Render' },
+]} />

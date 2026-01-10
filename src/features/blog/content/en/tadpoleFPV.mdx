@@ -1,0 +1,178 @@
+---
+lang: 'en'
+title: 'Tadpole FPV Transmitter PCB'
+description: 'Designing a cost-effective custom FPV transmitter PCB for a small drone project.'
+pubDate: 2025-06-27
+heroImage:
+  url: '../../../..//assets/tadpoleFPV/pcbartdiagonal.png'
+  alt: 'FPV Transmitter PCB Render'
+tags: ['Hack Club', 'electronics']
+difficulty: 'intermediate'
+isDraft: true
+featured: false
+relatedPosts: []
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+
+# Tadpole FPV Transmitter PCB
+
+This project started as a small FPV drone idea, but most of the completed work ended up being focused on designing a **custom, cost-effective FPV transmitter PCB**.
+
+---
+
+## Transmitter Concept and Part Selection
+
+I also worked to figure out how I could control the drone with a custom transmitter PCB.  
+I found that the flight controller I selected would work with ExpressLRS, which is an open source radio link protocol that would work with an ESP32 based transmitter. By pairing the ESP32 with an appropriate LoRa module I found, I should be able to create a custom transmitter PCB that can control the drone.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/FPVTransmitterHardwareTable01.png', alt: 'FPV Transmitter Hardware Table (WIP)' },
+]} />
+
+(The Transmitter Electronics list is still a work in progress)
+
+Finding good parts on AliExpress was more tedious then I expected as the prices seemed to keep changing, but I think I have a good completed list for the transmitter that should work well together.
+
+---
+
+## Finalizing Transmitter Electronics
+
+I had to take a massive break from this project due to a surgery I had, but now that I'm back I can continue working on the drone.
+
+I figured out the final parts I would need for the transmitter electronics and found suitable parts on AliExpress.  
+Once again, finding such parts with the specifics I was looking for was more time consuming than I was hoping for.
+
+I wanted to keep the device charging as easy as possible so I am using USB-C for the power input and 18650 battery charging.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/FPVTransmitterHardwareTable02.png', alt: 'FPV Transmitter Hardware Table (Final)' },
+]} />
+
+I also created a mockup of the transmitter electronics that I will be designing in KiCAD.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/DroneTransmitterElectronicsMockup.png', alt: 'Drone Transmitter Electronics Mockup' },
+]} />
+
+---
+
+## Starting the PCB Design in KiCAD
+
+With the parts selected, all I needed to do was add them into KiCAD...  
+Little did I know this would be the hardest part of the session.
+
+Finding all of the correct schematics and footprints for the parts was what I spent a good few hours on.  
+Eventually I had gotten the schematics and footprints imported correctly into KiCAD as shown by these glorious screenshots:
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/firstfootprints1.png', alt: 'First Schematic' },
+  { src: '/assets/tadpoleFPV/firstfootprints.png', alt: 'First Footprints' },
+]} />
+
+After getting these key components in, I wired up the schematic starting with the power section.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/powerschematic.png', alt: 'Power Schematic' },
+]} />
+
+After getting the power section wired up, I moved on to the LoRa module and ESP32 transmitter section.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/transmissionschematic.png', alt: 'Transmission Schematic' },
+]} />
+
+The last thing I worked on for the day was a custom footprint for the TP5100 battery charger as well as removing the keepout zone from the LoRa ESP32 module. (As it would not need to use Wifi or Bluetooth)
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/firstfootprints2.png', alt: 'Footprint updates' },
+]} />
+
+---
+
+## Finishing the Transmitter Schematic
+
+I finished up the input side of the controller by adding pins to interface with the gimbals and switches.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/inputschematic.png', alt: 'Input Schematic' },
+]} />
+
+I also went through and added a footprint for each of the components in the schematic that didnt already have one.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/footprintupdates.png', alt: 'Footprint Updates' },
+]} />
+
+>*No harm in double checking the footprints, right?*
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/physicallyprintedfootprints.jpg', alt: 'Physically printed footprints' },
+]} />
+
+---
+
+## Power Section Issues and Redesign
+
+While looking over the schematic, I realized that I had made a mistake in the power section.  
+Due to some interesting advertising, I had thought that the TP5100 battery charger could handle 2S batteries, but it turns out that is not the case.
+
+I elected to switch my batteries into a parallel configuration instead of series, which would allow me to use the TP5100 charger.  
+This meant I had to change my buck converter since the new nominal voltage would be 3.7V instead of 7.4V. (The buck converter I had selected needed at least 6V to operate)
+
+Soon I was down the rabbit hole of finding a new buck converter that would be able to work with the new voltage.
+
+During this process, I found the WEBENCH Power Designer by Texas Instruments, which I used to create a buck boost converter schematic that would work with the new voltage.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/BuckBoostConverterSchematic.png', alt: 'Buck Boost Converter Schematic' },
+]} />
+
+I also found some components on LCSC for the schematic.
+
+---
+
+## PCB Layout and Routing
+
+I started the day knowing I wanted to make the PCB as absolutely small as possible, and portrait.  
+The size would be largely constrained by the battery holders on the back of the PCB.
+
+Placing components got interesting as the batteries prevented me from adding tht components in that area.  
+This meant that a majority of the components would get pushed to the extremes of the board.
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/finishedlayout.png', alt: 'Finished PCB Layout' },
+]} />
+
+With all the components in place, I started wiring the traces of the board.  
+This process was made harder by my incessent love of thicker traces, and close component positions.
+
+>*Now this is my kind of puzzle*
+
+I used .4mm traces for a majority of the board leading to this quite *mesmerising* power section routing:
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/finishedpowersectionrouting.png', alt: 'Finished Power Section Routing' },
+]} />
+
+After a good while with some music in the background, I reached this:
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/boardfrontfinishedlayout.png', alt: 'Finished PCB Layout View Front' },
+  { src: '/assets/tadpoleFPV/boardbackfinishedlayout.png', alt: 'Finished PCB Layout View Back' },
+  { src: '/assets/tadpoleFPV/finishedrouting.png', alt: 'Finished PCB Routing' },
+]} />
+
+---
+
+## PCB Art
+
+I spent the day working on the PCB art and getting it ready for fabrication.  
+Here's the latest renders of the board:
+
+<Gallery images={[
+  { src: '/assets/tadpoleFPV/pcbartfront.png', alt: 'PCB Art Front' },
+  { src: '/assets/tadpoleFPV/pcbartback.png', alt: 'PCB Art Back' },
+  { src: '/assets/tadpoleFPV/pcbartdiagonal.png', alt: 'PCB Art Diagonal' },
+  { src: '/assets/tadpoleFPV/pcbroutingwithart.png', alt: 'PCB Routing with Art' },
+]} />

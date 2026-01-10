@@ -1,0 +1,123 @@
+---
+lang: 'en'
+title: 'SplashPad'
+description: 'A tiny feature-packed macropad for maximum efficiency.'
+pubDate: 2025-06-30
+heroImage:
+  url: '../../../..//assets/splashpad/IRLBuild.png'
+  alt: 'SplashPad Banner'
+tags: ['Hack Club', 'electronics']
+difficulty: 'intermediate'
+isDraft: false
+featured: false
+relatedPosts: []
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+
+# SplashPad
+
+### A Tiny, Glowing, Feature-Packed Macropad for Maximum Efficiency™  
+
+*(Or just a cool way to press "Play" on your music.)*  
+
+---
+
+## Renders 
+*Visuals because everyone loves eye candy.*
+
+<Gallery images={[
+  { src: '/assets/splashpad/caseRender.png', alt: 'Case Render' },
+]} />
+<Gallery images={[
+  { src: '/assets/splashpad/frontPCBRender.png', alt: 'Front PCB Render' },
+  { src: '/assets/splashpad/backPCBRender.png', alt: 'Back PCB Render' },
+]} />
+<Gallery images={[
+  { src: '/assets/splashpad/schematic.png', alt: 'Schematic Picture' },
+  { src: '/assets/splashpad/PCBRender.png', alt: 'PCB Design Picture' },
+]} />
+
+---
+## BOM
+All the bits and pieces needed can be found **[here](https://github.com/SharKingStudios/SplashPad/blob/main/BOM.md)**.
+
+---
+
+## What is this?  
+It’s a **custom macropad** built with the **Seeed Studio XIAO RP2040**, **KMK firmware**, and **way too many LEDs**. Whether you’re gaming, editing, coding, or just pressing random buttons for fun, this thing’s got you covered.
+
+### Features:
+- **3x3 Matrix** – Nine glorious keys to map to whatever your heart desires.
+- **Rotary Encoder** – Twist for volume, scroll, or secret hacker functions.
+- **Clickable Encoder Button** – Because sometimes, twisting isn’t enough.
+- **14 SK6812 Mini LEDs** – Way too many for a macropad this size. But hey, ✨blinkenlights✨.
+- **Multiple LED Modes** – Solid, Rainbow, Wave, and Grid Fade, for when you need that cyberpunk aesthetic.
+- **KMK Firmware** – Python-powered and open-source, because we like freedom.
+
+---
+
+## How It Works:
+This macropad runs either **KMK** or **QMK**, which means you get:
+- **Custom Keymaps** – Map macros, media keys, or even full-blown scripts.
+- **Dynamic Layers** – More functions per button? Yes, please.
+- **LED Control** – Pulsing blue? Rainbow waves? Subtle grid fade? Pick your poison.
+- **Rotary Encoder Support** – Spin for volume, brightness, scrolling, or **whatever**.
+
+---
+
+## How to Use:  
+1. **Flash KMK** onto your XIAO RP2040. *(If you don’t know how, Google it.)*<br />*or flash my QMK build* from [here](https://github.com/SharKingStudios/SplashPad/tree/main/Firmware/QMK).
+2. **Drop `kb.py` and `main.py`** onto your board.<br />*or use the QMK firmware provided in the link above.*
+3. **Plug it in.** Watch the lights do their thing.
+4. **Press buttons.** Turn the knob. Make magic happen.
+
+---
+
+## LED Modes:
+Because a macropad without RGB is just a fancy calculator.
+
+- **Solid Mode** – A slow, pulsing blue (totally not just lazy coding).
+- **Rainbow Mode** – Taste the colors.
+- **Wave Mode** – Water flow effect because vibes.
+- **Grid Fade Mode** – Simulates sunlight through water. Or something poetic like that.
+
+*(Press the encoder button to switch between them.)*
+
+---
+
+## Why?
+I built this macropad for [Hackpad](https://hackpad.hackclub.com/)—an awesome Hack Club YSWS project run by [Alex Ren](https://github.com/qcoral). With a the funding provided by the project, I wanted to create something that’s as practical as it is playful. Whether you're coding, gaming, or just jamming to your favorite tunes, this macropad is my way of saying:
+
+#### why settle for ordinary when you can hack something extraordinary?
+##
+## The Biggest Challenge:
+I wanted to use nice thick wires for my PCB (0.6mm) and routing all of these took quite a bit of effort. I think the time spent was definitely worth it, as the routing looks *awesome*.
+
+---
+
+## The Final Build:
+After soldering everything together and putting it in the case, here’s how it looks:
+
+<Gallery images={[
+  { src: '/assets/splashpad/IRLBuild.png', alt: 'Final Build' },
+]} />
+
+(The super cool keycaps are from [Undercity](/blog/en/highway-to-undercity/)!)
+
+---
+
+## Future Plans (Maybe):  
+- [OLED Screen?](https://github.com/SharKingStudios/Riptide) 🤔
+- Bluetooth support? (If I hate myself enough to deal with that.)
+- More layers? (How many is too many? Asking for a friend.)
+- [MIDI support](https://github.com/SharKingStudios/Fracture)? (Why not turn this into a DJ controller?)
+
+---
+
+## Disclaimer  
+This project is 100% free, [open-source](https://github.com/SharKingStudios/SplashPad/), and powered by **vibes**. If it breaks, explodes, or opens a black hole, **that’s on you.**
+
+<Gallery images={[
+  { src: '/assets/splashpad/banner.png', alt: 'Project Banner' },
+]} />
