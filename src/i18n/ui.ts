@@ -80,7 +80,7 @@ export const ui = {
       heroGreeting: "Hi, I'm Logan Peterson",
       heroSubtitlePart1: 'Aspriring Engineer',
       heroSubtitlePart2: 'Robotics Enthusiast',
-      heroIntroduction: 'Introduction TBD',
+      heroIntroduction: 'Welcome to my portfolio! I love building interesting robotic and electrical projects to solve my problems.',
       heroViewWorkButton: 'View My Work',
       heroContactButton: 'Get In Touch',
       heroImageAlt:
