@@ -101,7 +101,7 @@ export const ui = {
         'Discover my latest technical projects, showcasing my skills in robotics, programming, and engineering.',
       title: 'My Technical Portfolio',
       description:
-        'Discover my latest technical projects, showcasing my skills in robotics, programming, and engineering.',
+        'Discover my latest technical projects, showcasing my skills in robotics, programming, and engineering. You can also check out my GitHub <a href="https://github.com/SharKingStudios" class="text-primary underline">here</a>.',
       comingSoon: 'Project posts will appear here soon. Check back later!',
       heroImageAlt: 'Hero image for article: ',
       publishedOn: 'Published on: ',
