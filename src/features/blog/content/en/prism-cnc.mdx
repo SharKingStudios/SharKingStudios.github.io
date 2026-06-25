@@ -25,19 +25,16 @@ import Gallery from '@/features/blog/components/Gallery.astro';
 *Because if the CAD looks good enough, it becomes at least 30% more real.*
 
 <Gallery images={[
-  { src: '/assets/prism-cnc/CNC Front.png', alt: 'Prism CNC Front Render' },
-]} />
-<Gallery images={[
   { src: '/assets/prism-cnc/CNC Close.png', alt: 'Prism CNC Close Render' },
   { src: '/assets/prism-cnc/CNC Low.png', alt: 'Prism CNC Low Render' },
 ]} />
 <Gallery images={[
-  { src: '/assets/prism-cnc/CNC Side.png', alt: 'Prism CNC Side Render' },
+  { src: '/assets/prism-cnc/Prism CNC Zine Poster.png', alt: 'Prism CNC Poster' },
 ]} />
-
 ---
 
-## Project Files  
+## Project Files
+
 All the CAD, renders, and other files live **[here](https://github.com/SharKingStudios/Prism-CNC)**.
 
 ---
@@ -68,6 +65,7 @@ Prism CNC is built to be small enough to live on a desk, rigid enough to do my P
 ## Features
 
 ### 300mm+ Work Area
+
 Because tiny CNCs are sad CNCs.
 
 Using salvaged printer extrusions made the machine dimensions a little weird, but the end result is still a **work area slightly larger than 300 x 300 mm**, which is plenty for PCB panels and other small parts.
@@ -75,9 +73,11 @@ Using salvaged printer extrusions made the machine dimensions a little weird, bu
 ---
 
 ### Fully Enclosed Frame
+
 A CNC that throws chips everywhere is just a confetti machine.
 
 Prism CNC uses:
+
 - **Sheet metal structural side plates**
 - **Acrylic panels** for diffusion and aesthetics
 - **3D printed supports**
@@ -88,6 +88,7 @@ This gives the machine a much cleaner look while also helping contain debris.
 ---
 
 ### Ender 3 Hardware Reuse
+
 Broken printers deserve a second career.
 
 A big part of this build is reusing motion and frame hardware from old **Ender 3s**, which keeps the cost down and gives a pile of abandoned printer parts something more interesting to do.
@@ -95,10 +96,12 @@ A big part of this build is reusing motion and frame hardware from old **Ender 3
 ---
 
 ### 775 Spindle Motor
+
 Definitely not industrial.  
 Definitely good enough to make it interesting.
 
 The spindle I chose is a **775 DC motor**, which works for:
+
 - **PCB milling**
 - **Engraving**
 - **Light cutting operations**
@@ -108,6 +111,7 @@ It’s cheap, easy to replace, and perfectly fine for the kind of small precisio
 ---
 
 ### Linear Rails
+
 Because V-wheels were not invited to this project.
 
 The machine uses **linear rails** for smoother motion and improved rigidity compared to the usual printer-style wheel setups.
@@ -115,9 +119,11 @@ The machine uses **linear rails** for smoother motion and improved rigidity comp
 ---
 
 ### Limit Switches
+
 Guessing where home is only works until it doesn’t.
 
 Limit switches were added so the machine can:
+
 - **Zero itself properly**
 - **Home repeatably**
 - Be at least slightly less explosive during setup
@@ -125,6 +131,7 @@ Limit switches were added so the machine can:
 ---
 
 ### Dedicated Electronics Bay
+
 Electronics and flying debris should not be roommates.
 
 The controller electronics live in a **rear-mounted compartment**, while the **power supply is mounted to the rear side wall**.
@@ -207,9 +214,11 @@ The next step is turning the nice renders into an actual chip-producing machine.
 ---
 
 ## Future Plans
+
 A CNC project is never really “done,” it just reaches new levels of scope creep.
 
 Planned upgrades include:
+
 - **Automatic tool probe**
 - **A better spindle**
 - **Dust extraction**
@@ -222,6 +231,7 @@ Planned upgrades include:
 This project is [open-source](https://github.com/SharKingStudios/Prism-CNC) and built wit slightly questionable engineering decisions.
 
 If it:
+
 - flexes unexpectedly
 - mills copper into modern art
 - launches chips into another zip code

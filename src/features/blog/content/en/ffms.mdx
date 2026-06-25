@@ -1,0 +1,201 @@
+---
+lang: 'en'
+title: 'Fantasy Field Management System'
+description: 'I competed against 100 other teenagers and made a real-life wizard duel in 4 days. (And won!)'
+pubDate: 2026-06-01
+heroImage:
+  url: '../../../../assets/ffms/ffms-01.png'
+  alt: 'Fantasy Field Management System spell duel project'
+tags: ['Hack Club', 'Senior Year', 'Hackathon']
+difficulty: 'advanced'
+isDraft: false
+featured: false
+relatedPosts: []
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+
+# Fantasy Field Management System
+
+### A real-life wizard duel built in four days.
+
+---
+
+## Build Video
+
+<Gallery
+  images={[
+    {
+      type: 'video',
+      src: 'https://youtube.com/embed/pDGyxg6ZmgQ',
+      alt: 'How I won the coolest hardware hackathon in Texas',
+    },
+  ]}
+/>
+
+---
+
+## Project Files
+
+The full open-source project lives **[here](https://github.com/SharKingStudios/ffms)**.
+
+---
+
+## What is this?
+
+The **Fantasy Field Management System**, or **FFMS**, is a hackathon-built physical spell duel.
+
+Jisoo and I built it at [**Hack Club Stasis**](https://stasis.hackclub.com/) in Austin over four days. The idea was to make a game where players could hold real spellbooks, move around a physical arena, cast spells with gestures, and have the room react when those spells hit something.
+
+The final demo had:
+
+- Two handheld spellbooks named **Sol** and **Luna**
+- ESP32-based field nodes around the arena
+- A USB bridge node connected to the laptop
+- A Python game server and spectator dashboard
+- Motion-based spell gestures
+- Player health, fireballs, and shields
+- A physical spinning/light-up target
+- Audio effects
+
+It ended up winning first place at the event!
+
+---
+
+## Pictures
+
+<Gallery
+  images={[
+    { src: '/assets/ffms/ffms-02.png', alt: 'FFMS hardware and arena view' },
+    { src: '/assets/ffms/ffms-03.png', alt: 'FFMS spellbook electronics' },
+  ]}
+/>
+
+<Gallery
+  images={[
+    { src: '/assets/ffms/ffms-04.png', alt: 'FFMS physical build work' },
+    { src: '/assets/ffms/ffms-05.png', alt: 'FFMS dashboard and testing' },
+  ]}
+/>
+
+<Gallery
+  images={[
+    { src: '/assets/ffms/ffms-06.png', alt: 'FFMS spell duel testing' },
+    { src: '/assets/ffms/ffms-01.png', alt: 'FFMS final demo setup' },
+  ]}
+/>
+
+---
+
+## The Core Idea
+
+The project started with a tiny indoor positioning problem.
+
+I had a bunch of ESP32 boards, so I wanted to see if we could make a rough local positioning system using **ESP-NOW** signal strength. Fixed ESP32 field nodes sit around the play area and broadcast their position. The spellbooks listen for those packets and report the received signal strength back to the laptop.
+
+In a perfect world, signal strength would turn cleanly into distance.
+
+In a real hackathon venue full of people, tables, metal, wires, and chaos, it absolutely does not.
+
+So instead of pretending the data was perfect, the server used the readings as rough constraints. The estimate gets pushed and pulled until it settles into a position that makes sense for the latest readings.
+
+It was approximate, but approximate was enough for a wizard duel.
+
+---
+
+## Spellbooks
+
+The player controllers are ESP32-powered spellbooks.
+
+Each one tracks:
+
+- Nearby field-node signal strength
+- Yaw / aiming direction
+- Motion gestures from an **MPU6050**
+- Player state like health, mana, shields, and spell cooldowns
+
+The gestures were intentionally simple:
+
+- A downward / forward motion casts **fireball**
+- Pulling the spellbook back casts **shield**
+
+The first pretty version had LEDs, an OLED, battery power, and a much cleaner-looking perfboard setup.
+
+Naturally, that version made the tracking worse.
+
+When your entire positioning system depends on tiny changes in radio signal strength, surrounding the radio with extra wires, modules, power hardware, and LEDs is not exactly a peaceful environment. So the final version got simpler: ESP32, motion sensor, and the wiring needed to make the demo reliable.
+
+---
+
+## The Target
+
+One of the Stasis requirements was to use an item from the event shop.
+
+We got a fan with lights.
+
+Somehow, that became one of the best parts of the project.
+
+We turned the fan into a physical spell target. When a fireball hit it, lights flashed and the target spun. The laptop dashboard was useful, but the target made the interaction instantly understandable.
+
+The technical localization was the hard part, but the spinning target was the part everyone understood in half a second.
+
+<Gallery
+  images={[
+    { src: '/assets/ffms/ffms-07.png', alt: 'FFMS final demo setup' },
+  ]}
+/>
+
+---
+
+## Server and Dashboard
+
+The laptop server ties everything together.
+
+It handles:
+
+- Serial communication with the bridge ESP32
+- ESP-NOW message parsing
+- RSSI filtering
+- Position estimation
+- Player health and combat rules
+- Fireball and shield events
+- Relay control for the physical target
+- Audio playback
+- A python spectator dashboard
+
+The project also had a phone-audio idea where phones could connect to a local page and play directional spell sounds for each player. It worked sometimes, but venue networking made the latency too inconsistent for the final demo, so the final version used laptop audio instead.
+
+Hackathon engineering: glamorous, ruthless, and occasionally held together by judgment calls.
+
+---
+
+## Final Demo
+
+The final arena used a smaller four-node square because the longer-range field setup got too noisy. Bigger looked cooler on paper, but the small setup was more reliable when people were actually standing around judging the project.
+
+By the end, the demo had the important loop:
+
+1. Pick up a spellbook
+2. Move around the arena
+3. Cast a fireball or shield
+4. Watch the dashboard update
+5. Hit the other player or the target
+6. Hear and see something happen
+
+It was not perfect. The tracking was approximate, the phone audio got cut, and the controllers got less polished so they could actually work.
+
+But the demo made sense, people could play it, and it felt like magic in the real world.
+
+---
+
+## Disclaimer
+
+This project was built during a four-day hackathon with ESP32s, motion sensors, relays, audio files, a laptop server, and a lot of tuning.
+
+If you try to reproduce it and accidentally set your spellbook on fire, thats on you.
+
+<Gallery
+  images={[
+    { src: '/assets/ffms/ffms-08.png', alt: 'FFMS project presentation' },
+  ]}
+/>

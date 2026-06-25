@@ -21,6 +21,14 @@ import Gallery from '@/features/blog/components/Gallery.astro';
 
 ---
 
+## Project Files
+
+The full open-source ROS2 package lives **[here](https://github.com/SharKingStudios/Terralift)**.
+
+(You can request the hardware files if you want to build your own. I am working on a public release of the CAD and electrical files.)
+
+---
+
 ## Overview
 
 For my junior year engineering capstone project, I designed and built a mini warehouse automation robot called Terralift.
@@ -29,14 +37,15 @@ The robot is capable of lifting and transporting small pallets, simulating the f
 The robot features a robust lifting mechanism, precise navigation capabilities, and an intuitive control system.
 It is designed to operate in a warehouse-like environment to handle tasks such as pallet lifting, transportation, and placement.
 
-<Gallery images={[
-  { src: '/assets/terralift/CapstoneFront.jpg', alt: 'My Capstone Robot' },
-]} />
+<Gallery
+  images={[
+    { src: '/assets/terralift/CapstoneFront.jpg', alt: 'My Capstone Robot' },
+  ]}
+/>
 
 ---
 
 ## My Research Project
-
 
 Over the last decade, autonomous mobile robots (AMRs) have moved from research labs into real warehouses, hospitals, and public spaces. In these environments, robots are expected to move safely around people and obstacles while still finishing their tasks quickly enough to justify their cost. That creates a constant trade-off between safety (avoiding collisions, keeping clearance, stopping when needed) and efficiency (time, path length, energy). In Nav2, this trade-off is influenced by which local controller and global planner is picked, so these combinations are what I am testing on a real robot.
 
@@ -48,9 +57,14 @@ This robot is also the basis for my senior research paper, where I am currently 
 
 The Terralift robot next to a previous robotics project I designed for new members to improve their electrical design skills:
 
-<Gallery images={[
-  { src: '/assets/terralift/CapstoneAndBumbleBot.jpg', alt: 'My Capstone Robot next to my robotics robot design for the new members.' },
-]} />
+<Gallery
+  images={[
+    {
+      src: '/assets/terralift/CapstoneAndBumbleBot.jpg',
+      alt: 'My Capstone Robot next to my robotics robot design for the new members.',
+    },
+  ]}
+/>
 
 ---
 
@@ -60,45 +74,98 @@ The design process began with CAD modeling to create a detailed representation o
 The robot's chassis was constructed using steel for durability. The lifting mechanism was designed to handle weights up to a theoretical 10-15kg.
 The robot is powered by four high-torque motors, providing the necessary force for movement and lifting objects.
 
-<Gallery images={[
-  { src: '/assets/terralift/CapstoneCAD.png', alt: 'My Capstone Robot CAD' },
-]} />
+<Gallery
+  images={[
+    { src: '/assets/terralift/CapstoneCAD.png', alt: 'My Capstone Robot CAD' },
+  ]}
+/>
 
 I first did a dry fit of all the components to ensure everything fit together properly before painting.
 
-<Gallery images={[
-  { src: '/assets/terralift/FitTest1.jpg', alt: 'My Capstone Robot fit testing components' },
-]} />
-<Gallery images={[
-  { src: '/assets/terralift/FitTest2.jpg', alt: 'My Capstone Robot fit testing components another angle' },
-]} />
-<Gallery images={[
-  { src: '/assets/terralift/Paint1.jpg', alt: 'My Capstone Robot paint job on parts' },
-]} />
-<Gallery images={[
-  { src: '/assets/terralift/Paint2.jpg', alt: 'My Capstone Robot more paint' },
-  { src: '/assets/terralift/Paint3.jpg', alt: 'My Capstone Robot painted metal plate' },
-]} />
-<Gallery images={[
-  { src: '/assets/terralift/WiringStart.jpg', alt: 'My Capstone Robot wiring' },
-  { src: '/assets/terralift/WiringAlmostDone.jpg', alt: 'My Capstone Robot more wiring' },
-]} />
-<Gallery images={[
-  { src: '/assets/terralift/Wiring Progress.jpg', alt: 'My Capstone Robot even more wiring' },
-  { src: '/assets/terralift/CapstoneRGB.jpg', alt: 'My Capstone Robot bottom side leds' },
-]} />
+<Gallery
+  images={[
+    {
+      src: '/assets/terralift/FitTest1.jpg',
+      alt: 'My Capstone Robot fit testing components',
+    },
+  ]}
+/>
+<Gallery
+  images={[
+    {
+      src: '/assets/terralift/FitTest2.jpg',
+      alt: 'My Capstone Robot fit testing components another angle',
+    },
+  ]}
+/>
+<Gallery
+  images={[
+    {
+      src: '/assets/terralift/Paint1.jpg',
+      alt: 'My Capstone Robot paint job on parts',
+    },
+  ]}
+/>
+<Gallery
+  images={[
+    {
+      src: '/assets/terralift/Paint2.jpg',
+      alt: 'My Capstone Robot more paint',
+    },
+    {
+      src: '/assets/terralift/Paint3.jpg',
+      alt: 'My Capstone Robot painted metal plate',
+    },
+  ]}
+/>
+<Gallery
+  images={[
+    {
+      src: '/assets/terralift/WiringStart.jpg',
+      alt: 'My Capstone Robot wiring',
+    },
+    {
+      src: '/assets/terralift/WiringAlmostDone.jpg',
+      alt: 'My Capstone Robot more wiring',
+    },
+  ]}
+/>
+<Gallery
+  images={[
+    {
+      src: '/assets/terralift/Wiring Progress.jpg',
+      alt: 'My Capstone Robot even more wiring',
+    },
+    {
+      src: '/assets/terralift/CapstoneRGB.jpg',
+      alt: 'My Capstone Robot bottom side leds',
+    },
+  ]}
+/>
 
 ## Live Robot Testing
 
 Here is one of the first videos I took of the robot driving around. The top plate was off at the time to allow for easy access to the electronics.
 Here the robot is programmed for driver oriented control, meaning that pushing the joystick forward makes the robot go forward relative to the driver, not relative to the robot's orientation.
 
-<Gallery images={[
-  { type: 'video', src: 'https://youtube.com/embed/G4sTDwFcPJk', alt: 'Live Robot Testing' },
-]} />
+<Gallery
+  images={[
+    {
+      type: 'video',
+      src: 'https://youtube.com/embed/G4sTDwFcPJk',
+      alt: 'Live Robot Testing',
+    },
+  ]}
+/>
 
 I then tested what the robot could lift:
 
-<Gallery images={[
-  { type: 'video', src: 'https://youtube.com/embed/ijVibXUkuEs', alt: 'Live Robot Testing' },
-]} />
+<Gallery
+  images={[
+    {
+      type: 'video',
+      src: 'https://youtube.com/embed/ijVibXUkuEs',
+      alt: 'Live Robot Testing',
+    },
+  ]}
+/>

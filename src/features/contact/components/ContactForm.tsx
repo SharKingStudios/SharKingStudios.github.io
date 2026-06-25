@@ -17,7 +17,6 @@ import {
   type ContactFormValues,
   type ContactFormTranslations,
   contactFormSchema,
-  type ContactFormApiResponse,
 } from '../type';
 import { setGlobalZodErrorMap } from '@/i18n/zodErrorMap';
 import type { LanguageCode } from '@/i18n/ui';
@@ -50,43 +49,46 @@ export function ContactForm({
     mode: 'onBlur',
   });
 
-  async function onSubmit(values: ContactFormValues) {
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...values, lang }),
-      });
+  function buildGitHubIssueUrl(values: ContactFormValues) {
+    const issueBaseUrl =
+      import.meta.env.PUBLIC_CONTACT_ISSUE_URL ||
+      'https://github.com/SharKingStudios/SharKingStudios.github.io/issues/new';
+    const fullName = `${values.firstName} ${values.lastName}`.trim();
+    const issueBodyLines = [
+      '## Contact Form Submission',
+      '',
+      `**Name:** ${fullName}`,
+    ];
 
-      const result: ContactFormApiResponse = await response.json();
-
-      if (result.status === 'success') {
-        console.log('Form submitted successfully:', result);
-        toast.success(
-          result.message || formTranslations.toastSuccessMessageSent
-        );
-        form.reset();
-        if (onSubmitSuccess) {
-          onSubmitSuccess();
-        }
-      } else if (result.status === 'error') {
-        console.error('Form submission error:', result);
-        // Attempt to display server-side validation errors if available
-        let errorMessage =
-          result.message || formTranslations.toastErrorFailedToSend;
-        if (result.errors) {
-          // Example: Concatenate all error messages (you might want a more sophisticated display)
-          const errorMessages = Object.values(result.errors).flat().join('\n');
-          errorMessage += `\n\n${formTranslations.toastErrorDetails}\n${errorMessages}`;
-        }
-        toast.error(errorMessage);
-      }
-    } catch (error) {
-      console.error('An unexpected error occurred:', error);
-      toast.error(formTranslations.toastErrorUnexpected);
+    if (values.email) {
+      issueBodyLines.push(`**Email:** ${values.email}`);
     }
+
+    issueBodyLines.push('', '## Message', '', values.message);
+
+    const params = new URLSearchParams({
+      title: `Contact form: ${fullName}`,
+      body: issueBodyLines.join('\n'),
+    });
+
+    return `${issueBaseUrl}?${params.toString()}`;
+  }
+
+  async function onSubmit(values: ContactFormValues) {
+    const issueUrl = buildGitHubIssueUrl(values);
+    const openedWindow = window.open(issueUrl, '_blank');
+
+    if (openedWindow) {
+      openedWindow.opener = null;
+      toast.success('Opening GitHub so this message can be recorded.');
+      form.reset();
+      if (onSubmitSuccess) {
+        onSubmitSuccess();
+      }
+      return;
+    }
+
+    window.location.assign(issueUrl);
   }
 
   return (
@@ -175,6 +177,10 @@ export function ContactForm({
             </>
           )}
         </Button>
+        <p className="text-center text-xs text-muted-foreground">
+          Submitting opens a prefilled GitHub issue, which keeps a record of
+          your message.
+        </p>
       </form>
     </Form>
   );

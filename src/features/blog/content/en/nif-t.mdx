@@ -21,32 +21,44 @@ import Gallery from '@/features/blog/components/Gallery.astro';
 
 ---
 
-## Renders  
-*Visuals because everyone loves eye candy.*
+## Renders
 
-<Gallery images={[
-  { src: '/assets/nif-t/sidePCBRender.png', alt: 'Side PCB Render' },
-]} />
-<Gallery images={[
-  { src: '/assets/nif-t/topPCBRender.png', alt: 'Top PCB Render' },
-]} />
-<Gallery images={[
-  { src: '/assets/nif-t/bottomPCBRender.png', alt: 'Bottom PCB Render' },
-]} />
+_Visuals because everyone loves eye candy._
 
-<Gallery images={[
-  { src: '/assets/nif-t/PCBRender.png', alt: 'Routing Glamour Shot' },
-]} />
-<Gallery images={[
-  { src: '/assets/nif-t/schematicRoot.png', alt: 'Schematic Picture' },
-  { src: '/assets/nif-t/schematicPowerAndIO.png', alt: 'Schematic Picture' },
-]} />
+<Gallery
+  images={[{ src: '/assets/nif-t/sidePCBRender.png', alt: 'Side PCB Render' }]}
+/>
+<Gallery
+  images={[{ src: '/assets/nif-t/topPCBRender.png', alt: 'Top PCB Render' }]}
+/>
+<Gallery
+  images={[
+    { src: '/assets/nif-t/bottomPCBRender.png', alt: 'Bottom PCB Render' },
+  ]}
+/>
 
-> *The middle ground planes are hidden in the PCB Routing render*
+<Gallery
+  images={[{ src: '/assets/nif-t/PCBRender.png', alt: 'Routing Glamour Shot' }]}
+/>
+<Gallery
+  images={[
+    { src: '/assets/nif-t/schematicRoot.png', alt: 'Schematic Picture' },
+    { src: '/assets/nif-t/schematicPowerAndIO.png', alt: 'Schematic Picture' },
+  ]}
+/>
+
+> _The middle ground planes are hidden in the PCB Routing render_
 
 ---
 
-## BOM  
+## Project Files
+
+The full open-source project lives **[here](https://github.com/SharKingStudios/Nif-T)**.
+
+---
+
+## BOM
+
 All the silicon, magnetics, and clicky-relay goodness live **[here](https://github.com/SharKingStudios/Nif-T/blob/main/BOM.csv)**.
 
 ---
@@ -56,6 +68,7 @@ All the silicon, magnetics, and clicky-relay goodness live **[here](https://gith
 **Nif-T** is a **wired smart-home automation controller** built around an **ESP32-WROOM-32E**, designed to be the thing that actually flips real switches when you ask your house to do something.
 
 It’s meant for:
+
 - **Lights**
 - **Outlets**
 - **Relays**
@@ -66,12 +79,13 @@ It’s meant for:
 Unlike a lot of Wi-Fi-only smart devices, **Nif-T speaks Ethernet** — and it can be powered over the same cable using **PoE**. One cable in, automation out.
 
 At a high level, Nif-T:
+
 - Exposes **physical relays and LEDs**
 - Talks to **Home Assistant**
 - Which then talks to **Google Home**
 - So you can say things like:
 
-> *“Hey Google, turn on the big light.”*
+> _“Hey Google, turn on the big light.”_
 
 …and something actually happens.
 
@@ -80,6 +94,7 @@ At a high level, Nif-T:
 ## Features
 
 ### Relay Control
+
 - **8× independent relay outputs**
 - Designed for:
   - Lighting circuits
@@ -91,11 +106,12 @@ At a high level, Nif-T:
   - Home Assistant
   - Google Home (through HA)
 
-*(Please don’t hot-switch mains unless you know what you’re doing.)*
+_(Please don’t hot-switch mains unless you know what you’re doing.)_
 
 ---
 
 ### Ethernet + PoE
+
 Because reliability matters — and wall warts are annoying.
 
 - **LAN8720A Ethernet PHY**
@@ -114,6 +130,7 @@ Plug in Ethernet. That’s it.
 ---
 
 ### RGB Status LEDs
+
 Because silent boards are boring.
 
 - **10× SK6812 Mini (GRBW) LEDs**
@@ -128,6 +145,7 @@ Because silent boards are boring.
 ---
 
 ### Buttons & Feedback
+
 - **User button**
   - Can be mapped to:
     - Toggle a relay
@@ -160,16 +178,16 @@ Because silent boards are boring.
 
 ## Pin Highlights (High-Level)
 
-| Function        | Notes                                   |
-|-----------------|------------------------------------------|
-| Relays          | 8× GPIO-controlled outputs               |
-| LED Data        | SK6812 GRBW strip (10 LEDs)              |
-| Ethernet RMII   | LAN8720A w/ external 50 MHz oscillator   |
-| PoE Input       | IEEE 802.3af compliant                   |
-| User Button     | Input-only GPIO (external pull-ups)      |
-| Buzzer          | GPIO-driven piezo output                 |
+| Function      | Notes                                  |
+| ------------- | -------------------------------------- |
+| Relays        | 8× GPIO-controlled outputs             |
+| LED Data      | SK6812 GRBW strip (10 LEDs)            |
+| Ethernet RMII | LAN8720A w/ external 50 MHz oscillator |
+| PoE Input     | IEEE 802.3af compliant                 |
+| User Button   | Input-only GPIO (external pull-ups)    |
+| Buzzer        | GPIO-driven piezo output               |
 
-*(See schematic for full pin mapping and signal names.)*
+_(See schematic for full pin mapping and signal names.)_
 
 ---
 
@@ -181,7 +199,7 @@ At a high level:
 2. The **PoE PD negotiates power** and generates isolated DC rails
 3. The **ESP32 boots** and brings up Ethernet
 4. It connects to:
-   - An *MQTT broker* (usually Home Assistant)
+   - An _MQTT broker_ (usually Home Assistant)
 5. Home Assistant:
    - Discovers Nif-T automatically
    - Exposes relays and LEDs as entities
@@ -194,12 +212,14 @@ At a high level:
 ## Why?
 
 Because:
+
 - Wi-Fi smart plugs are flaky
 - Ethernet is king
 - PoE makes installs clean
-- And sometimes you just want a *solid, hackable, relay board* that plays nicely with modern home automation
+- And sometimes you just want a _solid, hackable, relay board_ that plays nicely with modern home automation
 
 Nif-T exists to be:
+
 - Boring in the best way
 - Reliable
 - Predictable
@@ -208,6 +228,7 @@ Nif-T exists to be:
 ---
 
 ## Project State
+
 The parts have been ordered and are currently being shipped.
 
 ---
@@ -217,6 +238,7 @@ The parts have been ordered and are currently being shipped.
 This project is [open-source](https://github.com/SharKingStudios/Nif-T), built for fun, and tested only in theory.
 
 If you:
+
 - Wire mains incorrectly
 - Ignore clearance rules
 - Overload a relay

@@ -61,7 +61,7 @@ export const ui = {
     site: {
       title: 'Logan Peterson',
       description:
-        'A portfolio site showcasing the projects and skills of Logan Peterson, an Aspiring Engineer.',
+        'A portfolio site where I show off all my cool projects and skills. I am an aspiring engineer with a passion for robotics and technology.',
     },
     nav: {
       home: 'Home',
@@ -74,11 +74,11 @@ export const ui = {
       rights: 'All rights reserved.',
     },
     homePage: {
-      pageTitle: 'Home | Logan Peterson - Aspriring Engineer',
+      pageTitle: 'Home | Logan Peterson - Aspiring Engineer',
       pageDescription:
         'Welcome to the portfolio of Logan Peterson, an Aspiring Engineer passionate about creating innovative robotic solutions.',
       heroGreeting: "Hi, I'm Logan Peterson",
-      heroSubtitlePart1: 'Aspriring Engineer',
+      heroSubtitlePart1: 'Aspiring Engineer',
       heroSubtitlePart2: 'Robotics Enthusiast',
       heroIntroduction: 'Welcome to my portfolio! I love building interesting robotic and electrical projects to solve my problems.',
       heroViewWorkButton: 'View My Work',
