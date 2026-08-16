@@ -156,37 +156,36 @@ const blogPosts: Array<CollectionEntry<'blog'>> = (await getCollection('blog', (
       description="A Rigorous STEM-Based Learning Program foundational to my education"
       className="flex flex-col items-center mb-8"
     />
-    <div class="flex flex-col md:flex-row items-center gap-8">
-      <div class="md:w-1/2">
-        <div class="bg-background rounded-lg shadow-lg p-8 flex items-center justify-center">
-          <Image
+    <div class="mx-auto mb-10 flex max-w-2xl justify-center">
+      <div class="flex w-full items-center justify-center rounded-lg bg-background p-6 shadow-lg md:p-8">
+        <Image
           src={CHARGEnorthLogo}
-          alt={'CHARGEnorth Logo'}
+          alt="CHARGEnorth Logo"
           width={600}
           height={368}
           densities={[1, 1.5, 2]}
           quality="high"
-          class="h-full w-full object-cover"
-          style="object-position: center 28%;"
+          class="max-h-48 w-auto object-contain"
         />
-        </div>
       </div>
-      <div class="md:w-1/2">
-        <div class="prose dark:prose-invert max-w-none">
-          <p class="text-lg text-muted-foreground">
-            CHARGEnorth is a rigorous STEM-based program that provides a comprehensive learning experience by integrating humanities and engineering.
-            The program is designed around project-based research and investigation, challenging us to delve deep into the course material.
-            It fosters a profound understanding of various STEM fields and cultivates essential skills such as critical thinking, problem-solving, and collaboration.
-            This innovative pathway has not only enriched my academic journey but also prepared me for future endeavors in STEM.
-          </p>
-          <p class="text-lg text-muted-foreground">
-            Beyond the core curriculum, CHARGEnorth offers a wealth of additional opportunities that enrich the learning experience.
-            The program provides access to advanced technology and resources, enabling us to engage in hands-on projects and real-world applications of our learning.
-            It also brings in industry professionals for guest lectures and workshops, offering us valuable insights into the practical aspects of STEM fields.
-            Furthermore, CHARGEnorth encourages participation in STEM-related competitions and events, fostering a spirit of innovation and competitiveness.
-            Being a part of CHARGEnorth has been a transformative experience, shaping me into a well-rounded individual ready to take on the challenges of the future.
-          </p>
-        </div>
+    </div>
+    <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div class="prose max-w-none dark:prose-invert">
+        <p class="text-lg text-muted-foreground">
+          CHARGEnorth is a rigorous STEM-based program that provides a comprehensive learning experience by integrating humanities and engineering.
+          The program is designed around project-based research and investigation, challenging us to delve deep into the course material.
+          It fosters a profound understanding of various STEM fields and cultivates essential skills such as critical thinking, problem-solving, and collaboration.
+          This innovative pathway has not only enriched my academic journey but also prepared me for future endeavors in STEM.
+        </p>
+      </div>
+      <div class="prose max-w-none dark:prose-invert">
+        <p class="text-lg text-muted-foreground">
+          Beyond the core curriculum, CHARGEnorth offers a wealth of additional opportunities that enrich the learning experience.
+          The program provides access to advanced technology and resources, enabling us to engage in hands-on projects and real-world applications of our learning.
+          It also brings in industry professionals for guest lectures and workshops, offering us valuable insights into the practical aspects of STEM fields.
+          Furthermore, CHARGEnorth encourages participation in STEM-related competitions and events, fostering a spirit of innovation and competitiveness.
+          Being a part of CHARGEnorth has been a transformative experience, shaping me into a well-rounded individual ready to take on the challenges of the future.
+        </p>
       </div>
     </div>
   </div>

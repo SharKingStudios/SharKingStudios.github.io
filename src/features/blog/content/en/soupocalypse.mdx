@@ -1,0 +1,107 @@
+---
+lang: 'en'
+title: 'Soupocalypse: The Last Bowl'
+description: 'A first-place physical fighting game where two players become the characters at Hack Club Fallout.'
+pubDate: 2026-07-07T12:00:00Z
+heroImage:
+  url: '../../../../assets/soupocalypse/team.jpg'
+  alt: 'The Soupocalypse team at Hack Club Fallout'
+tags: ['Hack Club', 'Hackathon']
+isDraft: false
+relatedPosts: ['en/ffms', 'en/daydream-atlanta', 'en/yeastbound-rise-of-the-dough', 'en/highway-to-undercity']
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+
+## Soupocalypse: The Last Bowl
+
+At **Hack Club Fallout** in Shenzhen, my team and I built a physical fighting game where the players become the characters.
+Players move around a real arena, a mmWave radar tracks their position, handheld controllers send heading and action data,
+and a laptop turns everything into a chaotic soup-powered battle over the last bowl of authentic Chinese soup.
+
+_Pokémon battles in real life, except you are the Pokémon._
+
+## Demo
+
+<Gallery
+  images={[
+    {
+      type: 'video',
+      src: 'https://www.youtube.com/embed/BXd05WfaruQ',
+      alt: 'Soupocalypse gameplay demo',
+    },
+  ]}
+/>
+
+## Results
+
+Soupocalypse won **1st place** (grand prize) at Fallout.
+
+## How it works
+
+Every match combines three streams of data:
+
+- An **HLK-LD2450 mmWave radar** tracks both players inside the arena.
+- Two **ESP32 controllers** use motion and compass data to report each player's heading and attacks over ESP-NOW.
+- A **Python/Pygame game engine** maps that data onto the spectator display, resolves combat, and controls the tournament flow.
+
+A downward swing fires a beam. An upward swing creates a shield bubble. Each player starts with three HP, and the first fighter to win two rounds claims the last bowl of authentic Chinese soup.
+
+<Gallery
+  images={[
+    {
+      src: '/assets/soupocalypse/battle.webp',
+      alt: 'Two Soupocalypse characters fighting over the last bowl of soup',
+    },
+  ]}
+/>
+
+## Turning plushies into controllers
+
+The handheld controllers started life as two green plushies.
+Inside, an MPU6050 detects swing gestures while a magnetometer keeps track of the direction each player is facing.
+The controllers send their readings wirelessly to an ESP32 on the laptop, which merges them with the radar positions and forwards everything to the server over serial.
+
+<Gallery
+  images={[
+    {
+      src: '/assets/soupocalypse/controller-1.webp',
+      alt: 'Coconut plush used as a Soupocalypse motion controller',
+    },
+    {
+      src: '/assets/soupocalypse/controller-2.webp',
+      alt: 'Bird plush used as a Soupocalypse motion controller',
+    },
+  ]}
+/>
+
+## Making it feel like a game
+
+I worked to build the full best-of-three match loop with character selection, countdowns, hit points, cooldowns, round wins, and a final victory screen. The roster features six Fallout organizers, each with a custom portrait, color palette, attack style, animations, sound effects, and voice lines.
+
+My teammates worked to put together the character images, voice lines, and sound effects. The final result is a chaotic dual between the two players, which was able to attract a croud of spectators during demos.
+
+## Team & links
+
+Built with **Arca Cengiz**, **Kai Pereira**, and **Elaine Wu** during Hack Club Fallout, a seven-day hardware hackathon in Shenzhen, China.
+
+- [Source code and build instructions](https://github.com/SharKingStudios/Soupocalypse)
+- [Hack Club Fallout](https://fallout.hackclub.com/)
+
+<Gallery
+  images={[
+    {
+      src: '/assets/soupocalypse/team.jpg',
+      alt: 'Soupocalypse zine poster with the team and project features',
+    },
+  ]}
+/>
+
+<Gallery
+  images={[
+    {
+      src: '/assets/soupocalypse/zine-poster.png',
+      alt: 'Soupocalypse zine poster with the team and project features',
+    },
+  ]}
+/>
