@@ -12,9 +12,11 @@ const { navItems } = Astro.props as Props;
 <header
   class="py-6 border-b sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60"
 >
-  <nav class="mx-auto px-4 max-w-screen-2xl flex justify-between items-center">
+  <nav
+    class="mx-auto grid max-w-screen-2xl grid-cols-[1fr_auto_1fr] items-center px-4"
+  >
     <Logo />
-    <div class="flex items-center gap-x-5">
+    <div class="flex items-center justify-self-center gap-x-5">
       {
         navItems.map((link) => (
           <a
@@ -27,7 +29,7 @@ const { navItems } = Astro.props as Props;
         ))
       }
     </div>
-    <div class="flex items-center gap-x-3">
+    <div class="flex items-center justify-self-end gap-x-3">
       <ThemeToggle />
     </div>
   </nav>

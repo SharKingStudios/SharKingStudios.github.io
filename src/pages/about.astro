@@ -1,0 +1,179 @@
+---
+import { Image } from 'astro:assets';
+import { Dumbbell } from 'lucide-react';
+import Heading from '@/components/Heading.astro';
+import { buttonVariants } from '@/components/ui/button';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CHARGEnorthLogo from '@/assets/charge-north-logo.jpg';
+import professionalPhoto from '@/assets/professional-pfp.jpg';
+import roboticsPhoto from '@/assets/robotics-photo.jpg';
+
+const pageTitle = 'About | Logan Peterson';
+const pageDescription =
+  'Learn more about Logan Peterson, his education, and his FRC journey.';
+---
+
+<BaseLayout {pageTitle} {pageDescription}>
+  <section class="py-12 md:py-16">
+    <div
+      class="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.7fr)]"
+    >
+      <div>
+        <Heading
+          title="About Me"
+          description="A little more about the interests behind my projects."
+          className="mb-6"
+        />
+        <div class="prose max-w-none dark:prose-invert">
+          <p class="text-lg text-muted-foreground">
+            Hi, I'm Logan Peterson. I have recently graduated from North
+            Gwinnett High School and served as the Electrical Lead in FRC team
+            1771. I was also a part of CHARGEnorth, my high school's STEM
+            program. I love to build robots, program, read, and create video
+            games. I bring a unique blend of technical expertise and creative
+            problem-solving to every project I undertake. My journey in the tech
+            world has been driven by a relentless curiosity and a desire to make
+            a positive impact through innovation.
+          </p>
+          <p class="text-lg text-muted-foreground">
+            My interest in engineering grew by turning ideas into projects I
+            could actually build and use. From my early Mini FRC Robot and retro
+            Bluetooth controller to Terralift, a warehouse automation robot, I
+            have enjoyed working through the each process including CAD,
+            electronics, programming, and testing. The problems that keep me
+            curious are the ones where all of those pieces have to work
+            together. I find that figuring out why something is not working is
+            often as interesting as building it in the first place.
+          </p>
+          <p class="text-lg text-muted-foreground">
+            Outside of robotics, I enjoy creating video games and being part of
+            creative technical communities. I have built games such as Horizon
+            Driving and Soupocalypse, and I was the lead organizer for Daydream
+            Atlanta, a Hack Club game jam at Georgia Tech. I also enjoy reading,
+            and I like finding new projects that let me combine technical
+            problem-solving with something creative.
+          </p>
+        </div>
+        <div class="mt-8 flex">
+          <a
+            href="/blog"
+            class={buttonVariants({ variant: 'default', size: 'lg' })}
+          >
+            <Dumbbell className="mr-2 size-4" />
+            View My Work
+          </a>
+        </div>
+      </div>
+
+      <div
+        class="aspect-[4/5] mx-auto w-full max-w-md overflow-hidden rounded-lg bg-muted shadow-lg"
+      >
+        <Image
+          src={professionalPhoto}
+          alt="Logan Peterson"
+          densities={[1, 1.5, 2]}
+          quality="high"
+          class="h-full w-full object-cover"
+          style="object-position: center 25%;"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-muted/20 py-12 md:py-16 dark:bg-background">
+    <div>
+      <Heading
+        title="Education"
+        titleTag="h2"
+        description="CHARGEnorth, the project-based STEM program at North Gwinnett High School."
+        className="flex flex-col items-center mb-8 text-center"
+      />
+      <Image
+        src={CHARGEnorthLogo}
+        alt="CHARGEnorth logo"
+        densities={[1, 1.5, 2]}
+        quality="high"
+        class="mx-auto mb-10 block h-auto w-full max-w-xl object-contain dark:brightness-0 dark:invert"
+      />
+      <div class="grid gap-8 md:grid-cols-2 md:gap-12">
+        <p class="text-lg leading-relaxed text-muted-foreground">
+          At North Gwinnett High School, I was part of CHARGEnorth, a rigorous
+          STEM-based program that provides a comprehensive learning experience
+          by integrating humanities and engineering. Designed around
+          project-based research and investigation, the program challenged us to
+          delve deeply into the course material. It fostered a profound
+          understanding of STEM fields while cultivating essential skills such
+          as critical thinking, problem-solving, and collaboration. This
+          innovative pathway enriched my academic journey and prepared me for
+          future endeavors in STEM.
+        </p>
+        <p class="text-lg leading-relaxed text-muted-foreground">
+          Beyond the core curriculum, CHARGEnorth at North Gwinnett provides
+          opportunities that enrich the learning experience. The program gives
+          students access to advanced technology and resources for hands-on
+          projects and real-world applications. It also brings in industry
+          professionals for guest lectures and workshops, offering valuable
+          insight into the practical side of STEM fields. Through STEM-related
+          competitions and events, CHARGEnorth fosters innovation and a spirit
+          of healthy competition. Being part of the program was a transformative
+          experience that helped shape me into a well-rounded student ready for
+          future challenges.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- <section class="py-12 md:py-16">
+    <div>
+      <Heading
+        title="My FRC Journey"
+        titleTag="h2"
+        description="The team experiences, technical growth, and lessons that I will expand on here."
+        className="flex flex-col items-center mb-8 text-center"
+      />
+      <div
+        class="aspect-[16/10] mb-10 overflow-hidden rounded-lg bg-muted shadow-lg md:aspect-[5/2]"
+      >
+        <Image
+          src={roboticsPhoto}
+          alt="Logan at a robotics competition"
+          densities={[1, 1.5, 2]}
+          quality="high"
+          class="h-full w-full object-cover"
+          style="object-position: center 15%;"
+        />
+      </div>
+      <div class="prose max-w-none dark:prose-invert">
+        <section>
+          <h3>FRC Team 1771</h3>
+          <p class="text-muted-foreground">
+            [TODO(ABOUT-CONTENT): Write about joining FRC Team 1771, my early
+            experience on the team, and the projects or seasons that stand out.]
+          </p>
+        </section>
+        <section>
+          <h3>Learning Electrical Systems</h3>
+          <p class="text-muted-foreground">
+            [TODO(ABOUT-CONTENT): Describe learning robot electrical
+            architecture, wiring, troubleshooting, and debugging.]
+          </p>
+        </section>
+        <section>
+          <h3>Electrical Lead</h3>
+          <p class="text-muted-foreground">
+            [TODO(ABOUT-CONTENT): Describe my responsibilities and technical
+            growth as Electrical Lead, including leadership or mentoring where
+            appropriate.]
+          </p>
+        </section>
+        <section>
+          <h3>Competitions and Lessons Learned</h3>
+          <p class="text-muted-foreground">
+            [TODO(ABOUT-CONTENT): Add memorable competitions, robots, seasons,
+            technical challenges, and the lessons I took from them.]
+          </p>
+        </section>
+      </div>
+    </div>
+  </section> -->
+</BaseLayout>

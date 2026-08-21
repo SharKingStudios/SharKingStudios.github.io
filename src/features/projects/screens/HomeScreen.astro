@@ -1,6 +1,7 @@
 ---
 import Heading from '@/components/Heading.astro';
 import SkillCard from '@/components/SkillCard.astro';
+import SectionCard from '@/components/section-card.astro';
 import { buttonVariants } from '@/components/ui/button';
 
 import type { LanguageCode } from '@/i18n/ui';
@@ -8,7 +9,6 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import { Calendar, Dumbbell } from 'lucide-react';
 
 import heroImage from '@/assets/user-hero.jpg';
-import CHARGEnorthLogo from '@/assets/charge-north-logo.jpg';
 import { Image } from 'astro:assets';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import BlogPostCard from '@/features/blog/components/BlogPostCard.astro';
@@ -49,8 +49,13 @@ const {
 } = Astro.props as Props;
 
 // Fetch the 3 most recent blog posts (projects)
-const blogPosts: Array<CollectionEntry<'blog'>> = (await getCollection('blog', ({ data }) => data.isDraft !== true))
-  .sort((a, b) => new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf())
+const blogPosts: Array<CollectionEntry<'blog'>> = (
+  await getCollection('blog', ({ data }) => data.isDraft !== true)
+)
+  .sort(
+    (a, b) =>
+      new Date(b.data.pubDate).valueOf() - new Date(a.data.pubDate).valueOf()
+  )
   .slice(0, 3);
 ---
 
@@ -116,16 +121,25 @@ const blogPosts: Array<CollectionEntry<'blog'>> = (await getCollection('blog', (
   <div class="container mx-auto px-4">
     <Heading
       title="About Me"
+      titleHref="/about/"
       description=""
       className="flex flex-col items-center mb-8"
     />
     <div class="prose dark:prose-invert max-w-none">
       <p class="text-lg text-center text-muted-foreground">
-        Hi, I'm Logan Peterson. I have recently graduated from North Gwinnett High School and served as the Electrical Lead in FRC team 1771.
-        I was also a part of CHARGEnorth, my highschool's STEM program.
-        I love to build robots, program, read, and create video games.
-        I bring a unique blend of technical expertise and creative problem-solving to every project I undertake.
-        My journey in the tech world has been driven by a relentless curiosity and a desire to make a positive impact through innovation.
+        Hi, I'm Logan Peterson. I have recently graduated from North Gwinnett
+        High School and served as the Electrical Lead in FRC team 1771. I was
+        also a part of CHARGEnorth, my highschool's STEM program. I love to
+        build robots, program, read, and create video games. I bring a unique
+        blend of technical expertise and creative problem-solving to every
+        project I undertake. My journey in the tech world has been driven by a
+        relentless curiosity and a desire to make a positive impact through
+        innovation. ‎ 
+        <a
+          href="/about/"
+          class="text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+          >Read more.</a
+        >
       </p>
     </div>
   </div>
@@ -140,54 +154,7 @@ const blogPosts: Array<CollectionEntry<'blog'>> = (await getCollection('blog', (
   />
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-    {
-      blogPosts.map((post) => (
-        <BlogPostCard post={post} lang={lang} />
-      ))
-    }
-  </div>
-</section>
-
-{/* CHARGEnorth Section */}
-<section class="py-12 md:py-16 bg-muted/10 dark:bg-muted/5">
-  <div class="container mx-auto px-4">
-    <Heading
-      title="What is CHARGEnorth?"
-      description="A Rigorous STEM-Based Learning Program foundational to my education"
-      className="flex flex-col items-center mb-8"
-    />
-    <div class="mx-auto mb-10 flex max-w-2xl justify-center">
-      <div class="flex w-full items-center justify-center rounded-lg bg-background p-6 shadow-lg md:p-8">
-        <Image
-          src={CHARGEnorthLogo}
-          alt="CHARGEnorth Logo"
-          width={600}
-          height={368}
-          densities={[1, 1.5, 2]}
-          quality="high"
-          class="max-h-48 w-auto object-contain"
-        />
-      </div>
-    </div>
-    <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-      <div class="prose max-w-none dark:prose-invert">
-        <p class="text-lg text-muted-foreground">
-          CHARGEnorth is a rigorous STEM-based program that provides a comprehensive learning experience by integrating humanities and engineering.
-          The program is designed around project-based research and investigation, challenging us to delve deep into the course material.
-          It fosters a profound understanding of various STEM fields and cultivates essential skills such as critical thinking, problem-solving, and collaboration.
-          This innovative pathway has not only enriched my academic journey but also prepared me for future endeavors in STEM.
-        </p>
-      </div>
-      <div class="prose max-w-none dark:prose-invert">
-        <p class="text-lg text-muted-foreground">
-          Beyond the core curriculum, CHARGEnorth offers a wealth of additional opportunities that enrich the learning experience.
-          The program provides access to advanced technology and resources, enabling us to engage in hands-on projects and real-world applications of our learning.
-          It also brings in industry professionals for guest lectures and workshops, offering us valuable insights into the practical aspects of STEM fields.
-          Furthermore, CHARGEnorth encourages participation in STEM-related competitions and events, fostering a spirit of innovation and competitiveness.
-          Being a part of CHARGEnorth has been a transformative experience, shaping me into a well-rounded individual ready to take on the challenges of the future.
-        </p>
-      </div>
-    </div>
+    {blogPosts.map((post) => <BlogPostCard post={post} lang={lang} />)}
   </div>
 </section>
 
@@ -212,4 +179,3 @@ const blogPosts: Array<CollectionEntry<'blog'>> = (await getCollection('blog', (
       }
     </div>
   </div> -->
-</section>

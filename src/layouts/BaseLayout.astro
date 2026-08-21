@@ -4,11 +4,10 @@ import { useTranslations } from '@/i18n/ui';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import BottomAppBar from '@/components/BottomAppBar.astro';
-import { Home, Briefcase, FileText, Lightbulb, MessageSquare } from 'lucide-react';
+import { Home, FileText, MessageSquare, UserRound } from 'lucide-react';
 import { ClientRouter } from 'astro:transitions';
 
 // Removed language selector imports
-import { Toaster } from 'sonner';
 
 type Props = {
   pageTitle: string;
@@ -27,6 +26,7 @@ const tSite = useTranslations(lang, 'site');
 const tNav = useTranslations(lang, 'nav');
 const navItems: Array<NavItem> = [
   { href: '/', label: tNav('home'), icon: Home },
+  { href: '/about/', label: tNav('about'), icon: UserRound },
   { href: '/blog', label: 'Projects', icon: FileText },
   { href: '/contact', label: tNav('contact'), icon: MessageSquare },
 ];
@@ -44,18 +44,21 @@ const navItems: Array<NavItem> = [
 
     <link rel="icon" href="/favicons/PFP Updated.png" />
     <link rel="shortcut icon" href="/favicons/PFP Updated.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/PFP Updated.png" />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/favicons/PFP Updated.png"
+    />
     <link rel="manifest" href="/favicons/light-mode/site.webmanifest" />
     <meta name="theme-color" content="#ffffff" />
-    
 
     <script is:inline>
       const getInitialTheme = () => {
         if (
-          typeof localStorage !== 'undefined' &&
-          localStorage.getItem('theme')
+          typeof sessionStorage !== 'undefined' &&
+          sessionStorage.getItem('theme')
         ) {
-          return localStorage.getItem('theme');
+          return sessionStorage.getItem('theme');
         }
         // Always default to light mode, ignore system preference
         return 'light';
@@ -66,9 +69,17 @@ const navItems: Array<NavItem> = [
       } else {
         document.documentElement.classList.remove('dark');
       }
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('theme', theme);
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('theme', theme);
       }
+
+      document.addEventListener('astro:before-swap', (event) => {
+        const storedTheme = sessionStorage.getItem('theme') || 'light';
+        event.newDocument.documentElement.classList.toggle(
+          'dark',
+          storedTheme === 'dark'
+        );
+      });
     </script>
     <title>{pageTitle || tSite('title')}</title>
 
@@ -101,10 +112,7 @@ const navItems: Array<NavItem> = [
     <div class="hidden md:block">
       <Footer />
     </div>
-    <BottomAppBar
-      navItems={navItems}
-    />
-    <Toaster position="bottom-right" richColors client:load />
+    <BottomAppBar navItems={navItems} />
     {/* Global scripts if needed, for example for analytics */}
     <script is:inline type="text/javascript">
       document.addEventListener('DOMContentLoaded', () => {

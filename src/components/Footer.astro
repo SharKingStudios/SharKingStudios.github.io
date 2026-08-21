@@ -9,7 +9,10 @@ const tSite = useTranslations(lang, 'site');
 
 <footer class="py-6 mt-auto text-center text-sm text-muted-foreground">
   <div class="container mx-auto px-4">
-    &copy; {new Date().getFullYear()}
-    {tSite('title')}. {tFooter('rights')}
+    <p>
+      &copy; {new Date().getFullYear()}{' '}{tSite('title')}.{' '}
+      {tFooter('rights')}
+    </p>
+    <!-- <p class="mt-1 text-xs">Jack of all trades but master of some.</p> -->
   </div>
 </footer>

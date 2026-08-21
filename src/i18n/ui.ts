@@ -1,4 +1,3 @@
-
 export const languages: Record<'en', { name: string; flag: string }> = {
   en: { name: 'English', flag: 'us' },
 } as const;
@@ -35,7 +34,8 @@ export const ui = {
           //   caption: 'Caption for gallery image 1',
           // },
         },
-        challenges: 'Description of challenges encountered while creating this sample project.',
+        challenges:
+          'Description of challenges encountered while creating this sample project.',
         learnings: 'Description of learnings from this sample project.',
       },
     },
@@ -61,10 +61,11 @@ export const ui = {
     site: {
       title: 'Logan Peterson',
       description:
-        'A portfolio site where I show off all my cool projects and skills. I am an aspiring engineer with a passion for robotics and technology.',
+        'Engineering portfolio of Logan Peterson featuring robotics, embedded systems, electronics, PCB design, firmware, and other technical projects.',
     },
     nav: {
       home: 'Home',
+      about: 'About',
       blog: 'Blog',
       contact: 'Contact',
       projects: 'Projects',
@@ -74,20 +75,20 @@ export const ui = {
       rights: 'All rights reserved.',
     },
     homePage: {
-      pageTitle: 'Home | Logan Peterson - Aspiring Engineer',
+      pageTitle: 'Logan Peterson | Embedded Systems, Robotics & Electronics',
       pageDescription:
-        'Welcome to the portfolio of Logan Peterson, an Aspiring Engineer passionate about creating innovative robotic solutions.',
+        'Explore projects by Logan Peterson including robotics, embedded systems, electronics, PCB design, firmware, and hands-on engineering.',
       heroGreeting: "Hi, I'm Logan Peterson",
-      heroSubtitlePart1: 'Aspiring Engineer',
-      heroSubtitlePart2: 'Robotics Enthusiast',
-      heroIntroduction: 'Welcome to my portfolio! I love building interesting robotic and electrical projects to solve my problems.',
+      heroSubtitlePart1: 'Embedded Systems',
+      heroSubtitlePart2: 'Robotics & Electronics',
+      heroIntroduction:
+        'Welcome to my portfolio! I love building interesting robotic and electrical projects to solve my problems.',
       heroViewWorkButton: 'View My Work',
       heroContactButton: 'Get In Touch',
-      heroImageAlt:
-        'Picture representing Logan Peterson.',
+      heroImageAlt: 'Picture representing Logan Peterson.',
       featuredProjectsTitle: '3 latest projects',
       featuredProjectsDescription:
-        "Here are some of the projects I've recently worked on. <a href=\"/blog\" class=\"text-primary underline\">Feel free to explore!</a>",
+        'Here are some of the projects I\'ve recently worked on. <a href="/blog" class="text-primary underline">Feel free to explore!</a>',
       projectCardViewProject: 'View Project',
       projectCardViewCode: 'View Code',
       imageNotAvailable: 'Image not available for now',
@@ -134,29 +135,11 @@ export const ui = {
       title: 'Contact Me',
       description:
         "Let's discuss a project, potential collaboration, or just chat about tech!",
-      formTitle: 'Send a message',
-      firstNameLabel: 'First Name',
-      lastNameLabel: 'Last Name',
-      emailLabel: 'Email',
-      messageLabel: 'Message',
-      sendButtonLabel: 'Send',
-      firstNamePlaceholder: 'Your first name',
-      lastNamePlaceholder: 'Your last name',
-      emailPlaceholder: 'Your email address',
-      messagePlaceholder: 'Your message here...',
-      calendarTitle: 'Schedule a Meeting',
-      calendarDescription:
-        'Prefer to talk live? Book a slot directly in my calendar.',
-      calendarButtonLabel: 'See my availability',
-      calendarLinkLabel: 'See my calendar',
-      calendarPlaceHolder:
-        'The integration with Google Calendar will be soon...',
-      orSeparatorText: 'OR',
-      toastSuccessMessageSent: 'Message sent successfully!',
-      toastErrorFailedToSend: 'Failed to send message.',
-      toastErrorUnexpected: 'An unexpected error occurred.',
-      toastErrorDetails: 'Error details:',
-      toastErrorValidationFailed: 'Form validation failed.',
+      emailTitle: 'Email',
+      emailDescription: 'The best way to reach me.',
+      orSeparatorText: 'or',
+      linkedinLabel: 'LinkedIn',
+      githubLabel: 'GitHub',
     },
     projectDetailPage: {
       backToProjects: 'Back to Projects',
@@ -176,7 +159,7 @@ export const ui = {
       metaDescription: "Discover all of Logan Peterson's projects.",
       noProjects: 'No projects to display at the moment.',
       noProjectsDescription:
-        "It seems there is something wrong! Come back later to see my projects.",
+        'It seems there is something wrong! Come back later to see my projects.',
     },
     notFoundPage: {
       pageTitle: 'Page Not Found',

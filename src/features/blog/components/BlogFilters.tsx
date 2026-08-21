@@ -19,21 +19,6 @@ import {
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-// Debounce utility
-function debounce<F extends (...args: any[]) => any>(func: F, waitFor: number) {
-  let timeout: ReturnType<typeof setTimeout> | null = null;
-
-  const debounced = (...args: Parameters<F>) => {
-    if (timeout !== null) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    timeout = setTimeout(() => func(...args), waitFor);
-  };
-
-  return debounced as (...args: Parameters<F>) => void;
-}
-
 type TagOption = {
   value: string;
   label: string;
@@ -62,34 +47,12 @@ export function BlogFilters({
   onSearchChange,
   onTagChange,
 }: BlogFiltersProps) {
-  // searchQuery and selectedTagValue are now managed by the parent (FilteredPostsList)
-  // currentSearchQuery and currentTag are the initial/active values passed as props
-  const [internalSearchQuery, setInternalSearchQuery] =
-    React.useState(currentSearchQuery);
-  const [internalSelectedTag, setInternalSelectedTag] =
-    React.useState(currentTag);
   const [popoverOpen, setPopoverOpen] = React.useState(false);
-
-  // Synchronize internal state if props change (for example, initialization from the URL)
-  React.useEffect(() => {
-    setInternalSearchQuery(currentSearchQuery);
-  }, [currentSearchQuery]);
-
-  React.useEffect(() => {
-    setInternalSelectedTag(currentTag);
-  }, [currentTag]);
-
-  const debouncedSearchChange = React.useMemo(
-    () => debounce(onSearchChange, 300), // Delay a bit for UI responsiveness
-    [onSearchChange]
-  );
 
   const handleInternalSearchChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const newQuery = event.target.value;
-    setInternalSearchQuery(newQuery);
-    debouncedSearchChange(newQuery);
+    onSearchChange(event.target.value);
   };
 
   const handleInternalTagSelect = (tagValueFromCommand: string) => {
@@ -97,14 +60,13 @@ export function BlogFilters({
     if (tagValueFromCommand === '') {
       // "All Tags" selected
       newSelectedTagValue = '';
-    } else if (tagValueFromCommand === internalSelectedTag) {
+    } else if (tagValueFromCommand === currentTag) {
       // Clicked current tag to deselect
       newSelectedTagValue = '';
     } else {
       // Selected a new tag
       newSelectedTagValue = tagValueFromCommand;
     }
-    setInternalSelectedTag(newSelectedTagValue);
     onTagChange(newSelectedTagValue);
     setPopoverOpen(false);
   };
@@ -116,7 +78,7 @@ export function BlogFilters({
       <Input
         type="search"
         placeholder={texts.searchPlaceholder}
-        value={internalSearchQuery}
+        value={currentSearchQuery}
         onChange={handleInternalSearchChange}
         className="w-full sm:max-w-xs"
       />
@@ -128,9 +90,8 @@ export function BlogFilters({
             aria-expanded={popoverOpen}
             className="w-full sm:w-[200px] justify-between"
           >
-            {internalSelectedTag &&
-            allTags.find((tag) => tag.value === internalSelectedTag)
-              ? allTags.find((tag) => tag.value === internalSelectedTag)?.label
+            {currentTag && allTags.find((tag) => tag.value === currentTag)
+              ? allTags.find((tag) => tag.value === currentTag)?.label
               : texts.filterByTagButtonLabel}
             <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
           </Button>
@@ -152,9 +113,7 @@ export function BlogFilters({
                     <Check
                       className={cn(
                         'mr-2 size-4',
-                        internalSelectedTag === tag.value
-                          ? 'opacity-100'
-                          : 'opacity-0'
+                        currentTag === tag.value ? 'opacity-100' : 'opacity-0'
                       )}
                     />
                     {tag.label}

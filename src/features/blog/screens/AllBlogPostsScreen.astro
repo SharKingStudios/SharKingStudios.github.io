@@ -1,9 +1,6 @@
 ---
 import Heading from '@/components/Heading.astro';
-import {
-  FilteredPostsList,
-  type PostDataForFilter,
-} from '@/features/blog/components/FilteredPostsList';
+import { FilteredPostsList } from '@/features/blog/components/FilteredPostsList';
 import { BlogPostCard } from '@/features/blog';
 import type { LanguageCode } from '@/i18n/ui';
 import { useTranslations } from '@/i18n/ui';
@@ -17,63 +14,50 @@ type Props = {
 };
 
 const { posts, lang } = Astro.props;
-
 const initialSearchQuery = Astro.url.searchParams.get('q') || '';
 const initialTag = Astro.url.searchParams.get('tag') || '';
-
 const texts = useTranslations(lang, 'blogPage');
-
-// Helper function to transform BlogEntry to PostDataForFilter
-function transformPostForClientFilter(
-  post: AstroCollectionEntry<'blog'>
-): PostDataForFilter {
-  return {
-    id: post.id,
-    slug: post.id ?? '',
-    title: post.data.title,
-    description: post.data.description || '',
-    tags: post.data.tags,
-    body: post.body ?? '',
-    pubDate: post.data.pubDate,
-    // heroImage and readingTimeMinutes are optional in PostDataForFilter
-  };
-}
 const componentTexts = {
   searchPlaceholder: texts('searchPlaceholder'),
   filterByTagButtonLabel: texts('filterByTagButtonLabel'),
   noTagFound: texts('noTagFound'),
   selectTagCommandPlaceholder: texts('selectTagCommandPlaceholder'),
   allTagsLabel: texts('allTagsLabel'),
-  noPostsFound: texts('noPostsFound'),
 };
-
-const t = useTranslations(lang, 'blogPage');
-
-const pageTitle = t('pageTitle');
-const pageDescription = t('pageDescription');
+const allTags = [...new Set(posts.flatMap((post) => post.data.tags ?? []))]
+  .sort()
+  .map((tag) => ({
+    value: tag,
+    label: tag.charAt(0).toUpperCase() + tag.slice(1),
+  }));
+const pageTitle = texts('pageTitle');
+const pageDescription = texts('pageDescription');
 ---
 
 <BaseLayout {pageTitle} {pageDescription}>
   <div class="container mx-auto px-4 py-8 md:py-12">
-    <Heading title={t('title')} description={t('description')} />
+    <Heading title={texts('title')} description={texts('description')} />
     <FilteredPostsList
       client:load
-      allPosts={posts.map(transformPostForClientFilter)}
+      {allTags}
       texts={componentTexts}
-      lang={lang}
-      initialSearchQuery={initialSearchQuery}
-      initialTag={initialTag}
+      {initialSearchQuery}
+      {initialTag}
     />
 
-    {/* Container for posts and "no posts found" message */}
     <div
       id="blog-posts-container"
-      class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8"
+      data-blog-filter-root
+      class="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3"
     >
       {
         posts.length > 0 ? (
           posts.map((postEntry) => (
-            <div class="blog-post-card-wrapper" data-post-id={postEntry.id}>
+            <div
+              class="blog-post-card-wrapper"
+              data-search={`${postEntry.data.title} ${postEntry.data.description ?? ''} ${(postEntry.data.tags ?? []).join(' ')}`}
+              data-tags={JSON.stringify(postEntry.data.tags ?? [])}
+            >
               <BlogPostCard post={postEntry} lang={lang} />
             </div>
           ))
@@ -93,88 +77,79 @@ const pageDescription = t('pageDescription');
     />
 
     <script>
-      import {
-        filteredPostIdsAtom,
-        filtersInitializedAtom,
-      } from '../../../stores/blogFilterStore';
+      let cleanupBlogFilters: (() => void) | undefined;
 
-      const postsContainer = document.getElementById('blog-posts-container');
-      const noPostsInitialMessage = document.getElementById(
-        'no-posts-initial-message'
-      );
-      const noPostsFilteredMessage = document.getElementById(
-        'no-posts-filtered-message'
-      );
-      const allPostCardWrappers = document.querySelectorAll(
-        '.blog-post-card-wrapper'
-      );
+      function setupBlogFilters() {
+        cleanupBlogFilters?.();
 
-      function updateVisiblePosts() {
+        const postsContainer = document.querySelector<HTMLElement>(
+          '[data-blog-filter-root]'
+        );
+        const noPostsInitialMessage = document.getElementById(
+          'no-posts-initial-message'
+        );
+        const noPostsFilteredMessage = document.getElementById(
+          'no-posts-filtered-message'
+        );
+        const postCards = Array.from(
+          document.querySelectorAll<HTMLElement>('.blog-post-card-wrapper')
+        );
+
         if (!postsContainer || !noPostsFilteredMessage) return;
 
-        const currentFilteredIds = filteredPostIdsAtom.get();
-        const isFiltersInitialized = filtersInitializedAtom.get();
-        let visibleCount = 0;
+        const applyFilters = (query = '', tag = '') => {
+          const normalizedQuery = query.trim().toLocaleLowerCase();
+          const normalizedTag = tag.trim().toLocaleLowerCase();
+          let visibleCount = 0;
 
-        allPostCardWrappers.forEach((wrapper) => {
-          const postIdAttribute = wrapper.getAttribute('data-post-id');
-          if (postIdAttribute !== null) {
-            // Now postIdAttribute is definitely a string
-            if (currentFilteredIds.includes(postIdAttribute)) {
-              wrapper.classList.remove('hidden');
-              visibleCount++;
-            } else {
-              wrapper.classList.add('hidden');
-            }
-          } else {
-            // If postIdAttribute is null (e.g., element doesn't have the attribute), ensure it's hidden.
-            wrapper.classList.add('hidden');
-          }
-        });
+          postCards.forEach((card) => {
+            const searchableText = (
+              card.dataset.search ?? ''
+            ).toLocaleLowerCase();
+            const tags = JSON.parse(card.dataset.tags ?? '[]') as string[];
+            const matchesQuery =
+              !normalizedQuery || searchableText.includes(normalizedQuery);
+            const matchesTag =
+              !normalizedTag ||
+              tags.some(
+                (postTag) => postTag.toLocaleLowerCase() === normalizedTag
+              );
+            const isVisible = matchesQuery && matchesTag;
 
-        if (noPostsInitialMessage) {
-          noPostsInitialMessage.classList.add('hidden'); // Hide initial message when posts are filtered
-        }
+            card.classList.toggle('hidden', !isVisible);
+            if (isVisible) visibleCount += 1;
+          });
 
-        if (isFiltersInitialized) {
-          if (visibleCount === 0) {
-            postsContainer.style.display = 'none';
-            noPostsFilteredMessage.classList.remove('hidden');
-          } else {
-            postsContainer.style.display = 'grid';
-            noPostsFilteredMessage.classList.add('hidden');
-          }
-        }
+          noPostsInitialMessage?.classList.add('hidden');
+          postsContainer.classList.toggle('hidden', visibleCount === 0);
+          noPostsFilteredMessage.classList.toggle('hidden', visibleCount !== 0);
+        };
+
+        const applyFiltersFromUrl = () => {
+          const params = new URLSearchParams(window.location.search);
+          applyFilters(params.get('q') ?? '', params.get('tag') ?? '');
+        };
+        const handleFilterChange = (event: Event) => {
+          const { query = '', tag = '' } =
+            (event as CustomEvent<{ query?: string; tag?: string }>).detail ??
+            {};
+          applyFilters(query, tag);
+        };
+
+        applyFiltersFromUrl();
+        window.addEventListener('blog:filters-change', handleFilterChange);
+        window.addEventListener('popstate', applyFiltersFromUrl);
+        cleanupBlogFilters = () => {
+          window.removeEventListener('blog:filters-change', handleFilterChange);
+          window.removeEventListener('popstate', applyFiltersFromUrl);
+        };
       }
 
-      // Listen for changes to the filtered post IDs
-      const unsubscribePostIds =
-        filteredPostIdsAtom.subscribe(updateVisiblePosts);
-
-      // Listen for initialization to perform the first update
-      const unsubscribeInitialized = filtersInitializedAtom.subscribe(
-        (isInitialized: boolean) => {
-          if (isInitialized) {
-            updateVisiblePosts();
-            // We can unsubscribe from filtersInitializedAtom after the first initialization if we don't expect it to change again
-            // unsubscribeInitialized();
-          }
-        }
+      setupBlogFilters();
+      document.addEventListener('astro:page-load', setupBlogFilters);
+      document.addEventListener('astro:before-swap', () =>
+        cleanupBlogFilters?.()
       );
-
-      // Clean up subscriptions when the component is destroyed (navigation)
-      // Astro doesn't automatically handle this for scripts like frameworks UI do for components.
-      // For a simple app, it's not critical, but it's a good practice.
-      // window.addEventListener('astro:page-load', () => { /* re-attach if necessary */ });
-      // window.addEventListener('astro:before-preparation', () => {
-      //   unsubscribePostIds();
-      //   unsubscribeInitialized();
-      // });
-
-      // Run once at initialization in case the store is already initialized (e.g., if the script loads after the React component)
-      if (filtersInitializedAtom.get()) {
-        updateVisiblePosts();
-      }
     </script>
   </div>
 </BaseLayout>
