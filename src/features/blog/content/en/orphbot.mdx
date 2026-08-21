@@ -1,0 +1,76 @@
+---
+lang: 'en'
+title: 'OrphBot'
+description: 'A compact ROS 2 robot with a front lifter, built as the example submission for Waypoint.'
+pubDate: 2026-08-04
+heroImage:
+  url: '../../../../assets/orphbot/orphbot-front.png'
+  alt: 'OrphBot front render'
+tags: ['Hack Club', 'Robotics']
+isDraft: false
+relatedPosts: ['en/terralift', 'en/beanbot', 'en/mini-frc-robot']
+---
+
+import Gallery from '@/features/blog/components/Gallery.astro';
+
+## OrphBot
+
+OrphBot is a compact four-wheel robot with a front lifter.
+I built it as the example submission for [Waypoint](https://waypoint.hackclub.com),
+my work-in-progress Hack Club YSWS program. It uses every component in the Waypoint kit and provides a complete reference project for participants.
+
+## A mini Terralift
+
+The design for the robot was inspired by my previous robot [Terralift](/blog/en/terralift).
+
+Because OrphBot's frame is fully 3D printed, I could build details directly into the enclosure.
+The five printed parts include a lower unibody, top plate, removable battery cover, button cover, and servo-mounted forks.
+
+<Gallery
+  images={[
+    { src: '/assets/orphbot/Orphbot%20Top.png', alt: 'OrphBot top render' },
+  ]}
+/>
+<Gallery
+  images={[
+    { src: '/assets/orphbot/Orphbot%20Side.png', alt: 'OrphBot side render' },
+    { src: '/assets/orphbot/Orphbot%20Back.png', alt: 'OrphBot back render' },
+  ]}
+/>
+<Gallery
+  images={[
+    { src: '/assets/orphbot/Orphbot%20Front.png', alt: 'OrphBot front render' },
+  ]}
+/>
+
+## Hardware
+
+- Four drive motors and a servo-powered front lifter
+- 128×64 OLED display
+- Six SK6812 MINI-E LEDs
+- MPU6050 IMU
+- 9V battery and a custom KiCad PCB
+- Eight M3 bolts and heat-set inserts to hold the electronics and enclosure together
+
+## Electronics
+
+The custom board brings the kit hardware together in one place. Its two-color top design, display, LEDs, motion sensor, and motor connections make it a useful starting point for a full Waypoint build.
+
+<Gallery
+  images={[
+    { src: '/assets/orphbot/Orphbot%20PCB%20Side.png', alt: 'OrphBot PCB side render' },
+  ]}
+/>
+<Gallery
+  images={[
+    { src: '/assets/orphbot/Schematic.png', alt: 'OrphBot schematic' },
+  ]}
+/>
+
+## Software
+
+OrphBot runs ROS 2. It can connect to RViz, accept Xbox controller input, run simple pre-programmed autonomous routines, and display a fluid simulation on its OLED. The ROS 2 package lives in the [OrphBot package repository](https://github.com/SharKingStudios/orphbot-package).
+
+## Project files
+
+The CAD, KiCad project, renders, and project documentation are in the [Waypoint repository](https://github.com/hackclub/waypoint/tree/main/extras/Orphbot).

@@ -1,5 +1,6 @@
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
+import { unified } from '@astrojs/markdown-remark';
 import react from '@astrojs/react';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
@@ -13,8 +14,20 @@ export default defineConfig({
   integrations: [
     react(),
     mdx({
-      remarkPlugins: [remarkReadingTime],
-      rehypePlugins: [[rehypeMermaid, { strategy: process.env.NODE_ENV === 'production' ? 'pre-mermaid' : 'inline-svg' }]],
+      processor: unified({
+        remarkPlugins: [remarkReadingTime],
+        rehypePlugins: [
+          [
+            rehypeMermaid,
+            {
+              strategy:
+                process.env.NODE_ENV === 'production'
+                  ? 'pre-mermaid'
+                  : 'inline-svg',
+            },
+          ],
+        ],
+      }),
       syntaxHighlight: { type: 'shiki', excludeLangs: ['mermaid'] },
     }),
   ],
