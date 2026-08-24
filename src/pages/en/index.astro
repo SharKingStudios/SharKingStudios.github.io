@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import heroImage from '@/assets/user-hero.jpg';
 import {
   PortfolioScreen,
   getTranslatedProjects,
@@ -38,6 +39,11 @@ const layoutProps = {
 };
 ---
 
-<BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+<BaseLayout
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+  pageImage={heroImage}
+  canonicalPath="/"
+>
   <PortfolioScreen {...layoutProps} />
 </BaseLayout>

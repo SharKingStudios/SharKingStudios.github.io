@@ -23,6 +23,10 @@ const layoutProps = {
 };
 ---
 
-<BaseLayout pageTitle={pageMeta.title} pageDescription={pageMeta.description}>
+<BaseLayout
+  pageTitle={pageMeta.title}
+  pageDescription={pageMeta.description}
+  canonicalPath="/contact/"
+>
   <ContactScreen {...layoutProps} />
 </BaseLayout>

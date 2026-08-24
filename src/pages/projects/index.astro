@@ -24,6 +24,6 @@ const metaDescription =
   projectsPageTranslations?.metaDescription ?? 'List of all my projects.';
 ---
 
-<BaseLayout pageTitle={metaTitle} pageDescription={metaDescription}>
+<BaseLayout pageTitle={metaTitle} pageDescription={metaDescription} noindex>
   <ProjectsScreen projects={projects} t={t} lang={lang} />
 </BaseLayout>

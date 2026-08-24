@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import heroImage from '@/assets/user-hero.jpg';
 import { defaultLanguage, useTranslations, type LanguageCode } from '@/i18n/ui';
 import {
   PortfolioScreen,
@@ -38,6 +39,10 @@ const layoutProps = {
 };
 ---
 
-<BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+<BaseLayout
+  pageTitle={pageTitle}
+  pageDescription={pageDescription}
+  pageImage={heroImage}
+>
   <PortfolioScreen {...layoutProps} />
 </BaseLayout>

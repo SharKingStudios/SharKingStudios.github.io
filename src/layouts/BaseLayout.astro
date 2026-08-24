@@ -4,14 +4,23 @@ import { useTranslations } from '@/i18n/ui';
 import Footer from '@/components/Footer.astro';
 import Header from '@/components/Header.astro';
 import BottomAppBar from '@/components/BottomAppBar.astro';
+import MermaidRenderer from '@/components/MermaidRenderer.astro';
 import { Home, FileText, MessageSquare, UserRound } from 'lucide-react';
 import { ClientRouter } from 'astro:transitions';
 
 // Removed language selector imports
 
+type JsonLd = Record<string, unknown>;
+
 type Props = {
   pageTitle: string;
   pageDescription?: string;
+  pageImage?: string | { src: string };
+  canonicalPath?: string;
+  noindex?: boolean;
+  openGraphType?: 'article' | 'website';
+  structuredData?: JsonLd | Array<JsonLd>;
+  usesMermaid?: boolean;
 };
 
 export type NavItem = {
@@ -20,10 +29,61 @@ export type NavItem = {
   icon: any;
 };
 
-const { pageTitle, pageDescription } = Astro.props;
+const {
+  pageTitle,
+  pageDescription,
+  pageImage,
+  canonicalPath,
+  noindex = false,
+  openGraphType = 'website',
+  structuredData,
+  usesMermaid = false,
+} = Astro.props;
 const lang = 'en';
 const tSite = useTranslations(lang, 'site');
 const tNav = useTranslations(lang, 'nav');
+const site = Astro.site ?? new URL('https://loganpeterson.org');
+const siteUrl = new URL('/', site).href;
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, site).href;
+const socialImage = pageImage
+  ? new URL(typeof pageImage === 'string' ? pageImage : pageImage.src, site)
+      .href
+  : undefined;
+const title = pageTitle.includes('Logan Peterson')
+  ? pageTitle
+  : `${pageTitle} | Logan Peterson`;
+const personId = `${siteUrl}#logan-peterson`;
+const websiteId = `${siteUrl}#website`;
+const extraStructuredData = structuredData
+  ? Array.isArray(structuredData)
+    ? structuredData
+    : [structuredData]
+  : [];
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': websiteId,
+      name: 'Logan Peterson',
+      url: siteUrl,
+      publisher: { '@id': personId },
+      inLanguage: 'en-US',
+    },
+    {
+      '@type': 'Person',
+      '@id': personId,
+      name: 'Logan Peterson',
+      url: siteUrl,
+      sameAs: [
+        'https://linkedin.loganpeterson.org',
+        'https://github.loganpeterson.org',
+      ],
+      knowsAbout: ['Embedded systems', 'Robotics', 'Electronics'],
+    },
+    ...extraStructuredData,
+  ],
+}).replace(/</g, '\\u003c');
 const navItems: Array<NavItem> = [
   { href: '/', label: tNav('home'), icon: Home },
   { href: '/about/', label: tNav('about'), icon: UserRound },
@@ -41,6 +101,31 @@ const navItems: Array<NavItem> = [
       name="description"
       content={pageDescription || tSite('description')}
     />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content={openGraphType} />
+    <meta property="og:site_name" content="Logan Peterson" />
+    <meta property="og:title" content={title} />
+    <meta
+      property="og:description"
+      content={pageDescription || tSite('description')}
+    />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:locale" content="en_US" />
+    {socialImage && <meta property="og:image" content={socialImage} />}
+
+    <meta
+      name="twitter:card"
+      content={socialImage ? 'summary_large_image' : 'summary'}
+    />
+    <meta name="twitter:title" content={title} />
+    <meta
+      name="twitter:description"
+      content={pageDescription || tSite('description')}
+    />
+    {socialImage && <meta name="twitter:image" content={socialImage} />}
+    <script type="application/ld+json" set:html={jsonLd} />
 
     <link rel="icon" href="/favicons/PFP Updated.png" />
     <link rel="shortcut icon" href="/favicons/PFP Updated.png" />
@@ -81,7 +166,7 @@ const navItems: Array<NavItem> = [
         );
       });
     </script>
-    <title>{pageTitle || tSite('title')}</title>
+    <title>{title || tSite('title')}</title>
 
     {/* Font, for example Google Fonts - to adapt according to your choices */}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -90,9 +175,6 @@ const navItems: Array<NavItem> = [
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <script
-      src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"
-      defer></script>
     <ClientRouter />
   </head>
   <body class="h-[100dvh] bg-background font-sans antialiased flex flex-col">
@@ -113,56 +195,6 @@ const navItems: Array<NavItem> = [
       <Footer />
     </div>
     <BottomAppBar navItems={navItems} />
-    {/* Global scripts if needed, for example for analytics */}
-    <script is:inline type="text/javascript">
-      document.addEventListener('DOMContentLoaded', () => {
-        const initializeAndRunMermaid = () => {
-          if (typeof mermaid !== 'undefined') {
-            const isDarkMode =
-              document.documentElement.classList.contains('dark');
-            const mermaidTheme = isDarkMode ? 'dark' : 'default';
-
-            let themeVars = {
-              fontFamily: '"Inter", sans-serif',
-              fontSize: '15px',
-              // Base variables (light mode defaults)
-              primaryColor: isDarkMode ? '#3B0764' : '#F3EFFF', // Node background
-              primaryTextColor: isDarkMode ? '#F3F4F6' : '#1f2937', // Node text
-              primaryBorderColor: isDarkMode ? '#A78BFA' : '#9333ea', // Node border
-              lineColor: isDarkMode ? '#A78BFA' : '#7E22CE', // Edge lines
-              textColor: isDarkMode ? '#E5E7EB' : '#374151', // General text (like edge labels)
-              edgeLabelBackground: isDarkMode ? '#4B3264' : '#E9D5FF', // Background for edge labels
-              // Specific for sequence diagrams, etc. (can be expanded)
-              actorBkg: isDarkMode ? '#3B0764' : '#F3EFFF',
-              actorBorder: isDarkMode ? '#A78BFA' : '#9333ea',
-              labelBoxBkgColor: isDarkMode ? '#2e104f' : '#f7f2ff', // Background for loop/alt/opt boxes
-              labelTextColor: isDarkMode ? '#E5E7EB' : '#374151',
-              noteBkgColor: isDarkMode ? '#2a0f4a' : '#fbf7ff',
-              noteTextColor: isDarkMode ? '#E5E7EB' : '#374151',
-              clusterBkg: isDarkMode ? '#240a3c' : '#faf5ff',
-              clusterBorder: isDarkMode ? '#7c3aed' : '#a855f7',
-            };
-
-            mermaid.initialize({
-              startOnLoad: false, // We call run() manually
-              theme: mermaidTheme,
-              themeVariables: themeVars,
-            });
-
-            mermaid.run({
-              nodes: document.querySelectorAll('pre.mermaid'), // Correct selector for inline-svg strategy
-            });
-          } else {
-            console.error('Mermaid object not found.');
-          }
-        };
-
-        initializeAndRunMermaid(); // Initial run on page load
-
-        document.addEventListener('astro:after-swap', () => {
-          initializeAndRunMermaid(); // Re-initialize and run after page swaps for SPA-like navigation
-        });
-      });
-    </script>
+    {usesMermaid && <MermaidRenderer />}
   </body>
 </html>

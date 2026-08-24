@@ -1,0 +1,40 @@
+<script
+  src="https://cdn.jsdelivr.net/npm/mermaid@11.6.0/dist/mermaid.min.js"
+  defer></script>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const initializeAndRunMermaid = () => {
+      if (typeof mermaid === 'undefined') return;
+
+      const isDarkMode = document.documentElement.classList.contains('dark');
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: isDarkMode ? 'dark' : 'default',
+        themeVariables: {
+          fontFamily: '"Inter", sans-serif',
+          fontSize: '15px',
+          primaryColor: isDarkMode ? '#3B0764' : '#F3EFFF',
+          primaryTextColor: isDarkMode ? '#F3F4F6' : '#1f2937',
+          primaryBorderColor: isDarkMode ? '#A78BFA' : '#9333ea',
+          lineColor: isDarkMode ? '#A78BFA' : '#7E22CE',
+          textColor: isDarkMode ? '#E5E7EB' : '#374151',
+          edgeLabelBackground: isDarkMode ? '#4B3264' : '#E9D5FF',
+          actorBkg: isDarkMode ? '#3B0764' : '#F3EFFF',
+          actorBorder: isDarkMode ? '#A78BFA' : '#9333ea',
+          labelBoxBkgColor: isDarkMode ? '#2e104f' : '#f7f2ff',
+          labelTextColor: isDarkMode ? '#E5E7EB' : '#374151',
+          noteBkgColor: isDarkMode ? '#2a0f4a' : '#fbf7ff',
+          noteTextColor: isDarkMode ? '#E5E7EB' : '#374151',
+          clusterBkg: isDarkMode ? '#240a3c' : '#faf5ff',
+          clusterBorder: isDarkMode ? '#7c3aed' : '#a855f7',
+        },
+      });
+
+      mermaid.run({ nodes: document.querySelectorAll('pre.mermaid') });
+    };
+
+    initializeAndRunMermaid();
+    document.addEventListener('astro:after-swap', initializeAndRunMermaid);
+  });
+</script>

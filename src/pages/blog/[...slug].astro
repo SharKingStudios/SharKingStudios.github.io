@@ -40,6 +40,7 @@ const finalRelatedPosts = (
 ).filter((p) => p !== null);
 
 const { Content, remarkPluginFrontmatter } = await render(post);
+const usesMermaid = post.body.includes('```mermaid');
 ---
 
 <BlogPostDetailScreen
@@ -50,6 +51,7 @@ const { Content, remarkPluginFrontmatter } = await render(post);
   lang={lang}
   relatedPosts={finalRelatedPosts}
   filePath={post.filePath ? post.filePath : ''}
+  {usesMermaid}
 >
   <Content />
 </BlogPostDetailScreen>

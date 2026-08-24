@@ -33,6 +33,6 @@ const pageTitle = `${project.title} | ${t.site.title}`;
 const pageDescription = project.detailedDescription ?? project.description;
 ---
 
-<BaseLayout pageTitle={pageTitle} pageDescription={pageDescription}>
+<BaseLayout pageTitle={pageTitle} pageDescription={pageDescription} noindex>
   <ProjectScreen project={project} t={t} lang={lang} />
 </BaseLayout>

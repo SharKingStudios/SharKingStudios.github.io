@@ -17,9 +17,10 @@ type Props = {
   lang: LanguageCode;
   relatedPosts: Array<CollectionEntry<'blog'>>;
   filePath: string;
+  usesMermaid: boolean;
 };
 
-const { post, lang, relatedPosts, filePath } = Astro.props;
+const { post, lang, relatedPosts, filePath, usesMermaid } = Astro.props;
 
 // Construct the GitHub edit URL
 const GITHUB_USER = 'SharKingStudios';
@@ -34,9 +35,39 @@ const t = useTranslations(lang, 'blogPost');
 
 const pageTitle = post.title;
 const pageDescription = post.description;
+const canonicalPath = `/blog/${post.id}/`;
+const site = Astro.site ?? new URL('https://loganpeterson.org');
+const canonicalUrl = new URL(canonicalPath, site).href;
+const postImage = post.heroImage?.url;
+const articleSchema = {
+  '@type': 'BlogPosting',
+  '@id': `${canonicalUrl}#article`,
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': canonicalUrl,
+  },
+  headline: post.title,
+  description: post.description,
+  image: postImage ? new URL(postImage.src, site).href : undefined,
+  author: { '@id': `${new URL('/', site).href}#logan-peterson` },
+  publisher: { '@id': `${new URL('/', site).href}#logan-peterson` },
+  datePublished: pubDate.toISOString(),
+  dateModified: (updatedDate ?? pubDate).toISOString(),
+  articleSection: post.tags,
+  keywords: post.tags?.join(', '),
+  inLanguage: lang,
+};
 ---
 
-<BaseLayout {pageTitle} {pageDescription}>
+<BaseLayout
+  {pageTitle}
+  {pageDescription}
+  pageImage={postImage}
+  {canonicalPath}
+  openGraphType="article"
+  structuredData={articleSchema}
+  {usesMermaid}
+>
   <article class="container mx-auto px-4 py-8 md:py-12 max-w-3xl">
     <a
       href="/blog"
@@ -51,6 +82,11 @@ const pageDescription = post.description;
       <div
         class="mt-3 flex items-center justify-between text-sm text-muted-foreground"
       >
+        <p>
+          By <a href="/about/" rel="author" class="hover:underline"
+            >Logan Peterson</a
+          >
+        </p>
         <p class="flex items-center gap-1">
           <b>{t('publishedOn')}</b>
           <span>{formatDate(pubDate, lang)}</span>
