@@ -104,7 +104,7 @@ The expansion modules could be literally anything! From a screen, a rechargeable
 
 ## How It Works:
 
-The infinitely expandable modules were built using an I2C bus! Also since the Orph Pico knows which modules are plugged in, certain modules could unlock further functionality from another! Like a button module being able to activate a haptic feedback (vibration) module. (This isnt built in yet // Software still WIP)
+The infinitely expandable modules were built using an I2C bus! Also since the Orph Pico knows which modules are plugged in, certain modules could unlock further functionality from another! Like a button module being able to activate a haptic feedback (vibration) module. (This isn't built in yet // Software still WIP)
 
 Each module slot has a 5V, EN, GND, SDA, and SCL lines.
 After a module is plugged in and ready to work it will pull its EN line high to 3.3V, letting the Pico know there is something there in that expansion slot!
@@ -122,7 +122,7 @@ After a module is plugged in and ready to work it will pull its EN line high to 
 
 ## Why?
 
-I built this keyboard for [Highway](https://highway.hackclub.com)—an awesome Hack Club YSWS project mainly run by [Alex Ren](https://github.com/qcoral). (I helped run this event as one of the project reviewers!) I wanted to create something that wasnt just useful, but also super cool! Thats why I went with creating my own expansion support instead of just adding a USB hub and calling it a day.
+I built this keyboard for [Highway](https://highway.hackclub.com)—an awesome Hack Club YSWS project mainly run by [Alex Ren](https://github.com/qcoral). (I helped run this event as one of the project reviewers!) I wanted to create something that wasn't just useful, but also super cool! That's why I went with creating my own expansion support instead of just adding a USB hub and calling it a day.
 
 ---
 
@@ -227,10 +227,10 @@ Today I worked on putting together the LEDs in the schematic, wiring the pico to
 />
 
 So I want to have 5 pins for each module. 5V, EN, GND, SDA, SCL
-I am planning on having the EN pin return 3.3V when the expansion module is ready. By having a EN pin for every module, I would be able to know which port I was plugging the module into. I am thinking this can give me some nice control and possibility for animations when you connect a module in a specific spot. (Like a wave emminating out from that port using the LEDs etc).
+I am planning on having the EN pin return 3.3V when the expansion module is ready. By having a EN pin for every module, I would be able to know which port I was plugging the module into. I am thinking this can give me some nice control and possibility for animations when you connect a module in a specific spot. (Like a wave emanating out from that port using the LEDs etc).
 Anyways, the I2C bus seems like a fairly robust option considering you can use it with breadboard components, so it should be more then fine to route across my keyboard to the various module slots.
 
-Since I would run out of GPIO pins if I gave the number connectors I wanted their own EN pin and since I already had an I2C bus, I decided to use a I2C GPIO expander to handle the EN pins. This also set my number of expansion slots at 16. (theres literally no reason to have this many but more is better right??)
+Since I would run out of GPIO pins if I gave the number connectors I wanted their own EN pin and since I already had an I2C bus, I decided to use a I2C GPIO expander to handle the EN pins. This also set my number of expansion slots at 16. (there's literally no reason to have this many but more is better right??)
 
 <Gallery
   images={[
@@ -284,7 +284,7 @@ After I figured out my connector footprint I put together a layout for my PCB (w
 
 ## Laying out LEDs + Encoder and OLED
 
-Today I layed out the LEDs into my PCB as well as adding an Encoder and an OLED.
+Today I laid out the LEDs into my PCB as well as adding an Encoder and an OLED.
 I started the LED placement with the 14 LEDs that would act as status LEDs for any connected module:
 
 <Gallery
@@ -368,7 +368,7 @@ After that I added in all the keyboard LEDs:
 
 I tried using .6mm to route everything then just switched back to .4mm to fit everything easier.
 I also added some 4.7k pull up resistors on the I2C lines because I forgot those earlier.
-After this I also added every 3D model. (Cant have a bare render right??)
+After this I also added every 3D model. (Can't have a bare render right??)
 
 <Gallery
   images={[
@@ -379,7 +379,7 @@ After this I also added every 3D model. (Cant have a bare render right??)
   ]}
 />
 
-After routing **_the entire thing_** I realized I forgot to add the all important stabiliers on the shift key, enter key, and backspace.
+After routing **_the entire thing_** I realized I forgot to add the all important stabilizers on the shift key, enter key, and backspace.
 When I did add them I needed to redo some wiring but they also interfered with multiple items including various LEDs and some of the expansion ports: <br/> _(Yes I fixed the 90 degree trace)_
 
 <Gallery
@@ -506,7 +506,7 @@ I wanted to use a similar style to my Splashpad and keep the awesome looking Orp
   ]}
 />
 
-I didnt like the way it was turning out so I changed it to this:
+I didn't like the way it was turning out so I changed it to this:
 
 <Gallery
   images={[
@@ -532,7 +532,7 @@ I then finished the day by adding bronze standoffs that I had lying around from 
 
 ## Finished the CAD
 
-Creating the middle section was kinda the hardest part of the CAD. Its also what really pulled this keyboard together (almost literally). It does look truely awesome though.
+Creating the middle section was kinda the hardest part of the CAD. Its also what really pulled this keyboard together (almost literally). It does look truly awesome though.
 
 WIP:
 
@@ -570,7 +570,7 @@ Final CAD:
 When I had made my Riptide hackpad, I used KMK firmware for its ease of use as I thought it would be easier.
 After I built it, I have been having significant trouble getting it to work. Instead for the keyboard I have decided to use QMK firmware.
 
-Making the firmware actually wasnt as hard as I thought it would be since I already had Ubuntu Linux installed in my terminal.
+Making the firmware actually wasn't as hard as I thought it would be since I already had Ubuntu Linux installed in my terminal.
 
 I did experience a number of errors:
 
@@ -598,10 +598,10 @@ But I was able to get it compiled:
 
 ## Blender my Glorious Goat
 
-I dont know blender but I really want some nice visuals.
+I don't know blender but I really want some nice visuals.
 Time to learn it ig.
 
-It actually wasnt too bad, except how after I exported from my CAD the keyboard had a bajillion assigned materials that I had to go through.
+It actually wasn't too bad, except how after I exported from my CAD the keyboard had a bajillion assigned materials that I had to go through.
 The extent of my lighting knowledge is to have a Key, Fill, and Ring.
 
 Working Screenshots:

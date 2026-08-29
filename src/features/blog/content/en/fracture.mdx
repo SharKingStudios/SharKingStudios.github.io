@@ -148,7 +148,7 @@ All the silicon, magnetics, and glowsticks live **[here](https://github.com/Shar
 
 ## Why?
 
-Because regular MIDI controllers are boring. Off-the-shelf keyboards don’t re-map themselves and you usually cant chain them together.
+Because regular MIDI controllers are boring. Off-the-shelf keyboards don’t re-map themselves and you usually can't chain them together.
 
 Fracture exists to be modular, mildly smart, and just slightly over-engineered.
 
@@ -292,7 +292,7 @@ And it even has no DRC Errors!
 
 Oopsies...
 
-I forgot that the footprint I imported for my ESP32 didnt include a keepout zone for the antenna, and I had routed a ton of traces right over it...
+I forgot that the footprint I imported for my ESP32 didn't include a keepout zone for the antenna, and I had routed a ton of traces right over it...
 
 Well after shifting things around a bit and adding a keepout for all the zone fills I got this:
 
@@ -311,9 +311,9 @@ Well after shifting things around a bit and adding a keepout for all the zone fi
 
 ## 12/23/2025 9:13 PM - Panelization (The better way)
 
-The last time I tried to panelize stuff the PCB manufacturer didn't actually do the VCUTs (Because I didnt pay extra for them to treat it like a panel..). This time I am going to do mouse bites. It took a bit of tweaking to get these to work. It was mainly an issue with the PCB Editor snap size and all the footprints not lining up but I got it to work in the end.
+The last time I tried to panelize stuff the PCB manufacturer didn't actually do the VCUTs (Because I didn't pay extra for them to treat it like a panel..). This time I am going to do mouse bites. It took a bit of tweaking to get these to work. It was mainly an issue with the PCB Editor snap size and all the footprints not lining up but I got it to work in the end.
 
-While I didnt need to panelize the larger PCBs to each other I did want to add some connector PCBs, so this was a good way of doing that.
+While I didn't need to panelize the larger PCBs to each other I did want to add some connector PCBs, so this was a good way of doing that.
 
 Heres what the epic PCBs look like now:
 
@@ -336,7 +336,7 @@ Heres what the epic PCBs look like now:
 
 ## 12/23/2025 9:17 PM - Fixed ESP32 Color
 
-The model for the ESP32 that I had found had a bright green PCB color, which didnt match the product or my design at all, so I wanted to change it.
+The model for the ESP32 that I had found had a bright green PCB color, which didn't match the product or my design at all, so I wanted to change it.
 
 I imported the file into Onshape and selected every single side that was green and changed it over to black. I also removed the LCSC logo :p
 
@@ -443,16 +443,16 @@ Banner:
   ]}
 />
 
-Ok this wouldnt have taken so long except that my normal workflow was interrupted...
+Ok this wouldn't have taken so long except that my normal workflow was interrupted...
 
 If I wanted to get this project out with the renders I needed to finish them before I got back home, to my computer with a GPU. This meant that all of my renders were done on a poor laptop with 8GB of ram. (Blender only crashed a couple times...)
 
 I didn't count the time for when the renders were actually going, since I got up and left but I did count everything else.
 
 My first challenge was getting my Onshape model into something that Blender can actually use.
-Since it cant normally import a step file and I wasnt about to mess around with Blender Addons I needed to find something that could change my step file over to a GLB file or OBJ file.
+Since it can't normally import a step file and I wasn't about to mess around with Blender Addons I needed to find something that could change my step file over to a GLB file or OBJ file.
 
-My first attempts were downloading freecad and attempting to export the imported step file as a OBJ file, but when I did this I just got the entire thing as a single mesh, which would make it impossible for me to apply different materials to all of the separate objects. (I am sure there is a way to do this in blender but I wouldnt know)
+My first attempts were downloading freecad and attempting to export the imported step file as a OBJ file, but when I did this I just got the entire thing as a single mesh, which would make it impossible for me to apply different materials to all of the separate objects. (I am sure there is a way to do this in blender but I wouldn't know)
 
 After figuring this out I searched for the solution I used during my last render.
 It was some random thing called "Cad Assistant" and after I got it working on my linux desktop I was able to finally export the model as a GLB file which I could import into blender.
@@ -517,7 +517,7 @@ These last 2 renders would crash blender as it finalized the images, meaning I h
 ## 12/28/2025 - Finished Firmware
 
 Vibecoding for the win!
-It still took me a while to define all of the pin mappings and say exactly what I needed everything to do (Theres a ton of stuff on this board)
+It still took me a while to define all of the pin mappings and say exactly what I needed everything to do (There's a ton of stuff on this board)
 
 I'll show off all of the stuff I added in this firmware in the demo video, but until then you need to read the code to figure it out :shh:
 
@@ -534,7 +534,7 @@ Heres a screenshot of some of the constants that can be edited:
   ]}
 />
 
-(Wow thats a whole zach latta constants)
+(Wow that's a whole zach latta constants)
 
 ## 12/30/2025 - Added PCB art and cleaned up silkscreen + PCB Renders
 
