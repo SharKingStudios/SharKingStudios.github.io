@@ -11,9 +11,34 @@ import roboticsPhoto from '@/assets/robotics-photo.jpg';
 const pageTitle = 'About | Logan Peterson';
 const pageDescription =
   'Learn more about Logan Peterson, his education, and his FRC journey.';
+const site = Astro.site ?? new URL('https://loganpeterson.org');
+const siteUrl = new URL('/', site).href;
+const profilePageSchema = {
+  '@type': 'ProfilePage',
+  '@id': new URL('/about/#profile', site).href,
+  url: new URL('/about/', site).href,
+  name: pageTitle,
+  mainEntity: {
+    '@type': 'Person',
+    '@id': `${siteUrl}#logan-peterson`,
+    name: 'Logan Peterson',
+    description: pageDescription,
+    image: new URL(professionalPhoto.src, site).href,
+    sameAs: [
+      'https://linkedin.loganpeterson.org',
+      'https://github.loganpeterson.org',
+      'https://github.com/sharkingstudios'
+    ],
+  },
+};
 ---
 
-<BaseLayout {pageTitle} {pageDescription} pageImage={professionalPhoto}>
+<BaseLayout
+  {pageTitle}
+  {pageDescription}
+  pageImage={professionalPhoto}
+  structuredData={profilePageSchema}
+>
   <section class="py-12 md:py-16">
     <div
       class="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(18rem,0.7fr)]"
